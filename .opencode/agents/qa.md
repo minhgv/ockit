@@ -1,9 +1,7 @@
 ---
 name: qa
 description: E2E QA Automation Engineer for ockit
-model:
-  primary: opencode/gpt-4o-mini
-  fallback: opencode/gpt-4o
+model: openai/gpt-4o-mini
 ---
 
 # QA Subagent — E2E Automation & Chaos Engineer

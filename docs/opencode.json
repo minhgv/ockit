@@ -1,0 +1,322 @@
+{
+	"$schema": "https://opencode.ai/config.json",
+	"lsp": false,
+	"agent": {
+		"build": {
+			"description": "Primary development agent",
+			"model": "opencode-go/deepseek-v4-flash"
+		},
+		"compaction": {
+			"description": "Session summarizer for context continuity across compactions",
+			"model": "opencode-go/deepseek-v4-flash"
+		},
+		"explore": {
+			"description": "Fast codebase search, patterns, and external research specialist",
+			"model": "opencode-go/deepseek-v4-flash"
+		},
+		"general": {
+			"description": "General-purpose subagent for fast, well-defined tasks; delegates complexity quickly",
+			"model": "opencode-go/deepseek-v4-flash"
+		},
+		"plan": {
+			"description": "Primary planning agent for architecture and multi-phase execution",
+			"model": "opencode-go/grok-4.5"
+		},
+		"review": {
+			"description": "Read-only bug scanner (findings only; remediate via /fix /create /plan)",
+			"model": "opencode-go/deepseek-v4-flash"
+		},
+		"vision": {
+			"description": "Visual content specialist for multimodal analysis and UI/UX guidance",
+			"model": "opencode-go/mimo-v2.5"
+		}
+	},
+	"autoupdate": false,
+	"compaction": {
+		"auto": true,
+		"reserved": 2048
+	},
+	"formatter": {
+		"biome": {
+			"command": ["npx", "@biomejs/biome", "check", "--write", "$FILE"],
+			"extensions": [".js", ".jsx", ".ts", ".tsx", ".json", ".jsonc"]
+		}
+	},
+	"instructions": [
+		".opencode/memory/project/user.md",
+		".opencode/memory/project/tech-stack.md",
+		".opencode/memory/project/project.md",
+		".opencode/context/git-context.md"
+	],
+	"mcp": {
+		"figma-mcp-go": {
+			"command": ["npx", "-y", "@vkhanhqui/figma-mcp-go@latest"],
+			"enabled": false,
+			"timeout": 120000,
+			"type": "local"
+		},
+		"webclaw": {
+			"command": ["webclaw-mcp"],
+			"enabled": false,
+			"timeout": 120000,
+			"type": "local"
+		}
+	},
+	"model": "opencode-go/deepseek-v4-flash",
+	"permission": {
+		"bash": {
+			"*": "allow",
+			"cat *": "allow",
+			"git branch *": "allow",
+			"git checkout *": "ask",
+			"git clean *": "ask",
+			"git commit *": "ask",
+			"git diff *": "allow",
+			"git log *": "allow",
+			"git merge *": "ask",
+			"git push *": "ask",
+			"git rebase *": "ask",
+			"git reset *": "ask",
+			"git status *": "allow",
+			"ls *": "allow",
+			"npm *": "allow",
+			"npm publish *": "ask",
+			"npm run db:push*": "ask",
+			"npm run db:reset*": "deny",
+			"npx *": "allow",
+			"rm *": "deny",
+			"rm -rf *": "deny",
+			"sudo *": "deny"
+		},
+		"doom_loop": "ask",
+		"edit": "allow",
+		"external_directory": "ask",
+		"question": "allow",
+		"read": {
+			"*": "allow",
+			"*.env": "deny",
+			"*.env.*": "deny",
+			"*.env.example": "allow",
+			"*.key": "deny",
+			"*.pem": "deny",
+			"*credentials*": "deny",
+			"*password*": "deny",
+			"*secret*": "deny",
+			"*token*": "deny"
+		}
+	},
+	"plugin": [
+		"@tarquinen/opencode-dcp@3.1.12",
+		"@franlol/opencode-md-table-formatter@0.0.3",
+		"openslimedit@latest",
+		"opencodex-fast@latest"
+	],
+	"provider": {
+		"xai": {
+			"models": {
+				"grok-4.5": {
+					"name": "Grok 4.5",
+					"limit": {
+						"context": 500000,
+						"output": 500000
+					},
+					"reasoning": true,
+					"temperature": true,
+					"tool_call": true,
+					"modalities": {
+						"input": ["text", "image"],
+						"output": ["text"]
+					}
+				}
+			}
+		},
+		"opencode-go": {
+			"options": {
+				"baseURL": "https://opencode.ai/zen/go/v1"
+			},
+			"models": {
+				"deepseek-v4-flash": {
+					"limit": {
+						"context": 200000,
+						"output": 64000
+					},
+					"reasoning": true,
+					"tool_call": true
+				},
+				"mimo-v2.5": {
+					"limit": {
+						"context": 180000,
+						"output": 64000
+					},
+					"modalities": {
+						"input": ["text", "image"],
+						"output": ["text"]
+					},
+					"reasoning": true,
+					"tool_call": true
+				},
+				"deepseek-v4-pro": {
+					"limit": {
+						"context": 240000,
+						"output": 64000
+					},
+					"reasoning": true,
+					"tool_call": true
+				},
+				"mimo-v2.5-pro": {
+					"limit": {
+						"context": 220000,
+						"output": 64000
+					},
+					"modalities": {
+						"input": ["text", "image", "audio"],
+						"output": ["text"]
+					},
+					"reasoning": true,
+					"tool_call": true
+				}
+			}
+		},
+		"deepseek": {
+			"models": {
+				"deepseek-v4-flash": {
+					"limit": {
+						"context": 200000,
+						"output": 64000
+					},
+					"reasoning": true,
+					"tool_call": true
+				},
+				"deepseek-v4-pro": {
+					"limit": {
+						"context": 240000,
+						"output": 64000
+					},
+					"reasoning": true,
+					"tool_call": true
+				}
+			}
+		},
+		"mimo": {
+			"models": {
+				"mimo-v2.5": {
+					"limit": {
+						"context": 180000,
+						"output": 64000
+					},
+					"modalities": {
+						"input": ["text", "image", "audio"],
+						"output": ["text"]
+					},
+					"reasoning": true,
+					"tool_call": true
+				},
+				"mimo-v2.5-pro": {
+					"limit": {
+						"context": 220000,
+						"output": 64000
+					},
+					"modalities": {
+						"input": ["text", "image", "audio"],
+						"output": ["text"]
+					},
+					"reasoning": true,
+					"tool_call": true
+				}
+			}
+		},
+		"zai": {
+			"name": "Z.AI (OpenAI Compatible)",
+			"options": {
+				"baseURL": "https://api.z.ai/api/coding/paas/v4",
+				"apiKey": "{env:ZAI_API_KEY}",
+				"includeUsage": true,
+				"timeout": 600000
+			},
+			"models": {
+				"GLM-4.5-Air": {
+					"name": "GLM-4.5-Air",
+					"limit": {
+						"context": 128000,
+						"output": 32768
+					},
+					"reasoning": true,
+					"temperature": true,
+					"tool_call": true,
+					"modalities": {
+						"input": ["text"],
+						"output": ["text"]
+					}
+				},
+				"GLM-4.7": {
+					"name": "GLM-4.7",
+					"limit": {
+						"context": 200000,
+						"output": 65536
+					},
+					"reasoning": true,
+					"temperature": true,
+					"tool_call": true,
+					"modalities": {
+						"input": ["text"],
+						"output": ["text"]
+					}
+				},
+				"GLM-5-Turbo": {
+					"name": "GLM-5-Turbo",
+					"limit": {
+						"context": 200000,
+						"output": 65536
+					},
+					"reasoning": true,
+					"temperature": true,
+					"tool_call": true,
+					"modalities": {
+						"input": ["text"],
+						"output": ["text"]
+					}
+				},
+				"GLM-5.2": {
+					"name": "GLM-5.2",
+					"limit": {
+						"context": 1000000,
+						"output": 131072
+					},
+					"reasoning": true,
+					"temperature": true,
+					"tool_call": true,
+					"modalities": {
+						"input": ["text"],
+						"output": ["text"]
+					}
+				},
+				"GLM-5V-Turbo": {
+					"name": "GLM-5V-Turbo",
+					"limit": {
+						"context": 200000,
+						"output": 65536
+					},
+					"reasoning": true,
+					"temperature": true,
+					"tool_call": true,
+					"modalities": {
+						"input": ["text", "image"],
+						"output": ["text"]
+					}
+				}
+			}
+		}
+	},
+	"share": "manual",
+	"small_model": "opencode/gpt-5-nano",
+	"watcher": {
+		"ignore": [
+			"node_modules/**",
+			".git/**",
+			"dist/**",
+			"build/**",
+			"*.log",
+			".DS_Store"
+		]
+	}
+}

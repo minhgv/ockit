@@ -19,7 +19,7 @@ class OckitInstaller:
         os.makedirs(opencode_dir, exist_ok=True)
         copied_files: list[str] = []
 
-        subdirs = ["agents", "plugins", "workflows", "skills"]
+        subdirs = ["agents", "plugins", "workflows", "prompts", "skills"]
         for sd in subdirs:
             src_sd = os.path.join(self.templates_dir, sd)
             dst_sd = os.path.join(opencode_dir, sd)

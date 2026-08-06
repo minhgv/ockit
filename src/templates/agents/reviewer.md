@@ -1,9 +1,7 @@
 ---
 name: reviewer
 description: Principal Code & Security Auditor for ockit
-model:
-  primary: opencode/claude-3-5-sonnet
-  fallback: opencode/gpt-4o
+model: anthropic/claude-3-5-sonnet
 ---
 
 # Reviewer Subagent — Security & Quality Auditor

@@ -1,9 +1,7 @@
 ---
 name: coder
 description: Senior Developer (TDD RED-GREEN-REFACTOR) for ockit
-model:
-  primary: opencode/claude-3-5-sonnet
-  fallback: opencode/gpt-4o
+model: anthropic/claude-3-5-sonnet
 ---
 
 # Coder Subagent — Senior TDD Developer

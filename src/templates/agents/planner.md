@@ -1,9 +1,7 @@
 ---
 name: planner
 description: Lead System Architect & BA Specialist for ockit
-model:
-  primary: opencode/deepseek-r1
-  fallback: opencode/gpt-4o
+model: google/gemini-2.5-pro
 ---
 
 # Planner Subagent — Lead Architect & Business Analyst

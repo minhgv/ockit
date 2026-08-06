@@ -16,6 +16,7 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
         "agents_valid": False,
         "plugins_valid": False,
         "skills_valid": False,
+        "workflows_valid": False,
         "errors": [],
         "warnings": [],
     }
@@ -39,6 +40,7 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
     agents_dir = os.path.join(opencode_dir, "agents")
     plugins_dir = os.path.join(opencode_dir, "plugins")
     skills_dir = os.path.join(opencode_dir, "skills")
+    workflows_dir = os.path.join(opencode_dir, "workflows")
 
     expected_agents = ["planner.md", "coder.md", "reviewer.md", "qa.md"]
     missing_agents = []
@@ -90,5 +92,25 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
             results["warnings"].append(f"Missing production skills: {missing_skills}")
     else:
         results["errors"].append(".opencode/skills directory missing")
+
+    # 6. Check 14 Workflows / Prompts
+    expected_workflows = [
+        "brainstorm.md", "doctor.md", "gate.md", "grill.md", "init.md",
+        "learn.md", "migrate.md", "pipeline.md", "plan.md", "qa.md",
+        "review.md", "safe-pipeline.md", "schedule.md", "solve.md"
+    ]
+    missing_workflows = []
+
+    if os.path.exists(workflows_dir):
+        for wf in expected_workflows:
+            wf_path = os.path.join(workflows_dir, wf)
+            if not os.path.exists(wf_path):
+                missing_workflows.append(wf)
+        if not missing_workflows:
+            results["workflows_valid"] = True
+        else:
+            results["warnings"].append(f"Missing workflows: {missing_workflows}")
+    else:
+        results["errors"].append(".opencode/workflows directory missing")
 
     return results
