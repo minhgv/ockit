@@ -121,7 +121,11 @@
 		},
 		"doom_loop": "ask",
 		"edit": "allow",
-		"external_directory": "ask",
+		"external_directory": {
+			"*": "ask",
+			"/Users/giapminh79/.config/opencode/skills/*": "allow",
+			"/Users/giapminh79/.config/opencode/skill/*": "allow"
+		},
 		"question": "allow",
 		"read": {
 			"*": "allow",
