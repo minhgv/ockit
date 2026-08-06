@@ -38,6 +38,24 @@ class OckitInstaller:
                             shutil.copy2(s_file, d_file)
                             copied_files.append(d_file)
 
+        # Create singular compatibility symlinks (agent, plugin, prompt, workflow, skill)
+        aliases = {
+            "agents": "agent",
+            "plugins": "plugin",
+            "workflows": "workflow",
+            "prompts": "prompt",
+            "skills": "skill",
+        }
+        for plural, singular in aliases.items():
+            src_p = os.path.join(opencode_dir, plural)
+            dst_s = os.path.join(opencode_dir, singular)
+            if os.path.exists(src_p) and not os.path.exists(dst_s):
+                try:
+                    os.symlink(plural, dst_s)
+                except Exception:
+                    # Fallback to copytree if symlink fails on Windows
+                    shutil.copytree(src_p, dst_s, dirs_exist_ok=True)
+
         # Copy opencode.json config file
         src_opencode_json = os.path.join(self.templates_dir, "opencode.json")
         dst_opencode_json = os.path.join(opencode_dir, "opencode.json")

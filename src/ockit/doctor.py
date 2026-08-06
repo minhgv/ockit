@@ -54,11 +54,11 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
     else:
         results["errors"].append(".opencode/opencode.json configuration file missing")
 
-    # 4. Check .opencode agents, plugins, skills, workflows
-    agents_dir = os.path.join(opencode_dir, "agents")
-    plugins_dir = os.path.join(opencode_dir, "plugins")
-    skills_dir = os.path.join(opencode_dir, "skills")
-    workflows_dir = os.path.join(opencode_dir, "workflows")
+    # 4. Check .opencode agents, plugins, skills, workflows (support both plural and singular)
+    agents_dir = os.path.join(opencode_dir, "agents") if os.path.exists(os.path.join(opencode_dir, "agents")) else os.path.join(opencode_dir, "agent")
+    plugins_dir = os.path.join(opencode_dir, "plugins") if os.path.exists(os.path.join(opencode_dir, "plugins")) else os.path.join(opencode_dir, "plugin")
+    skills_dir = os.path.join(opencode_dir, "skills") if os.path.exists(os.path.join(opencode_dir, "skills")) else os.path.join(opencode_dir, "skill")
+    workflows_dir = os.path.join(opencode_dir, "workflows") if os.path.exists(os.path.join(opencode_dir, "workflows")) else os.path.join(opencode_dir, "workflow")
 
     expected_agents = [
         "orchestrator.md", "planner.md", "coder.md", "reviewer.md", "qa.md",
@@ -76,7 +76,7 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
         else:
             results["errors"].append(f"Missing subagent specs: {missing_agents}")
     else:
-        results["errors"].append(".opencode/agents directory missing")
+        results["errors"].append(".opencode/agents (or .opencode/agent) directory missing")
 
     # Check plugins
     expected_plugins = ["ockit-quality-gate.js", "ockit-ba-traceability.js", "ockit-tdd-runner.js"]
@@ -92,7 +92,7 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
         else:
             results["warnings"].append(f"Missing recommended plugins: {missing_plugins}")
     else:
-        results["errors"].append(".opencode/plugins directory missing")
+        results["errors"].append(".opencode/plugins (or .opencode/plugin) directory missing")
 
     # Check skills (12 skills)
     expected_skills = [
@@ -112,7 +112,7 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
         else:
             results["warnings"].append(f"Missing production skills: {missing_skills}")
     else:
-        results["errors"].append(".opencode/skills directory missing")
+        results["errors"].append(".opencode/skills (or .opencode/skill) directory missing")
 
     # Check 14 Workflows
     expected_workflows = [
@@ -132,6 +132,6 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
         else:
             results["warnings"].append(f"Missing workflows: {missing_workflows}")
     else:
-        results["errors"].append(".opencode/workflows directory missing")
+        results["errors"].append(".opencode/workflows (or .opencode/workflow) directory missing")
 
     return results
