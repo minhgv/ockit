@@ -145,10 +145,10 @@
 		}
 	},
 	"plugin": [
-		"./plugins/ockit-quality-gate.js",
-		"./plugins/ockit-ba-traceability.js",
-		"./plugins/ockit-tdd-runner.js",
-		"./plugins/ockit-linter-fixer.js",
+		"./plugin/ockit-quality-gate.js",
+		"./plugin/ockit-ba-traceability.js",
+		"./plugin/ockit-tdd-runner.js",
+		"./plugin/ockit-linter-fixer.js",
 		"@tarquinen/opencode-dcp@3.1.12",
 		"@franlol/opencode-md-table-formatter@0.0.3",
 		"openslimedit@latest",

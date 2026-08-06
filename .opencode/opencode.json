@@ -8,11 +8,11 @@
 	"agent": {
 		"orchestrator": {
 			"description": "Master Pipeline Orchestrator & SDLC State Manager for ockit",
-			"model": "opencode-go/deepseek-v4-flash"
+			"model": "opencode-go/grok-4.5"
 		},
 		"planner": {
 			"description": "Lead System Architect & BA Specialist for ockit",
-			"model": "opencode-go/mimo-v2.5"
+			"model": "opencode-go/grok-4.5"
 		},
 		"coder": {
 			"description": "Senior TDD Developer (RED-GREEN-REFACTOR)",
@@ -42,6 +42,18 @@
 			"description": "General-purpose subagent for fast, well-defined tasks; delegates complexity quickly",
 			"model": "opencode-go/deepseek-v4-flash"
 		},
+		"plan": {
+			"description": "Primary planning agent for architecture and multi-phase execution",
+			"model": "opencode-go/grok-4.5"
+		},
+		"review": {
+			"description": "Read-only bug scanner (findings only; remediate via /fix /create /plan)",
+			"model": "opencode-go/deepseek-v4-flash"
+		},
+		"vision": {
+			"description": "Visual content specialist for multimodal analysis and UI/UX guidance",
+			"model": "opencode-go/mimo-v2.5"
+		}
 	},
 	"compaction": {
 		"auto": true,
@@ -133,10 +145,10 @@
 		}
 	},
 	"plugin": [
-		"./plugins/ockit-quality-gate.js",
-		"./plugins/ockit-ba-traceability.js",
-		"./plugins/ockit-tdd-runner.js",
-		"./plugins/ockit-linter-fixer.js",
+		"./plugin/ockit-quality-gate.js",
+		"./plugin/ockit-ba-traceability.js",
+		"./plugin/ockit-tdd-runner.js",
+		"./plugin/ockit-linter-fixer.js",
 		"@tarquinen/opencode-dcp@3.1.12",
 		"@franlol/opencode-md-table-formatter@0.0.3",
 		"openslimedit@latest",

@@ -18,11 +18,11 @@ class TestInstaller(unittest.TestCase):
         self.temp_target = tempfile.mkdtemp()
 
         # Create dummy template structure
-        os.makedirs(os.path.join(self.temp_templates, "agents"))
-        os.makedirs(os.path.join(self.temp_templates, "skills", "ba-expert"))
-        with open(os.path.join(self.temp_templates, "agents", "planner.md"), "w") as f:
+        os.makedirs(os.path.join(self.temp_templates, "agent"))
+        os.makedirs(os.path.join(self.temp_templates, "skill", "ba-expert"))
+        with open(os.path.join(self.temp_templates, "agent", "planner.md"), "w") as f:
             f.write("# Dummy Planner")
-        with open(os.path.join(self.temp_templates, "skills", "ba-expert", "SKILL.md"), "w") as f:
+        with open(os.path.join(self.temp_templates, "skill", "ba-expert", "SKILL.md"), "w") as f:
             f.write("# Dummy BA Skill")
 
     def tearDown(self):
@@ -34,8 +34,8 @@ class TestInstaller(unittest.TestCase):
         res = installer.initialize_project(target_dir=self.temp_target)
 
         self.assertEqual(res["status"], "success")
-        self.assertTrue(os.path.exists(os.path.join(self.temp_target, ".opencode", "agents", "planner.md")))
-        self.assertTrue(os.path.exists(os.path.join(self.temp_target, ".opencode", "skills", "ba-expert", "SKILL.md")))
+        self.assertTrue(os.path.exists(os.path.join(self.temp_target, ".opencode", "agent", "planner.md")))
+        self.assertTrue(os.path.exists(os.path.join(self.temp_target, ".opencode", "skill", "ba-expert", "SKILL.md")))
 
 
 if __name__ == "__main__":
