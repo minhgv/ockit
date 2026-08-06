@@ -15,6 +15,7 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
         "python_version": "",
         "agents_valid": False,
         "plugins_valid": False,
+        "skills_valid": False,
         "errors": [],
         "warnings": [],
     }
@@ -37,6 +38,7 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
     opencode_dir = os.path.join(project_root, ".opencode")
     agents_dir = os.path.join(opencode_dir, "agents")
     plugins_dir = os.path.join(opencode_dir, "plugins")
+    skills_dir = os.path.join(opencode_dir, "skills")
 
     expected_agents = ["planner.md", "coder.md", "reviewer.md", "qa.md"]
     missing_agents = []
@@ -68,5 +70,25 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
             results["warnings"].append(f"Missing recommended plugins: {missing_plugins}")
     else:
         results["errors"].append(".opencode/plugins directory missing")
+
+    # 5. Check skills (12 skills)
+    expected_skills = [
+        "ba-expert", "brainstorming", "grill-me", "problem-solving",
+        "qa-auditor", "qa-reproducer", "qa-test-gen", "quality-gate",
+        "tdd-workflow", "writing-skills"
+    ]
+    missing_skills = []
+
+    if os.path.exists(skills_dir):
+        for sk in expected_skills:
+            sk_path = os.path.join(skills_dir, sk, "SKILL.md")
+            if not os.path.exists(sk_path):
+                missing_skills.append(sk)
+        if not missing_skills:
+            results["skills_valid"] = True
+        else:
+            results["warnings"].append(f"Missing production skills: {missing_skills}")
+    else:
+        results["errors"].append(".opencode/skills directory missing")
 
     return results

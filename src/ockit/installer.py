@@ -19,18 +19,21 @@ class OckitInstaller:
         os.makedirs(opencode_dir, exist_ok=True)
         copied_files: list[str] = []
 
-        subdirs = ["agents", "plugins", "workflows"]
+        subdirs = ["agents", "plugins", "workflows", "skills"]
         for sd in subdirs:
             src_sd = os.path.join(self.templates_dir, sd)
             dst_sd = os.path.join(opencode_dir, sd)
             os.makedirs(dst_sd, exist_ok=True)
 
             if os.path.exists(src_sd):
-                for item in os.listdir(src_sd):
-                    s_file = os.path.join(src_sd, item)
-                    d_file = os.path.join(dst_sd, item)
+                for root, dirs, files in os.walk(src_sd):
+                    rel_path = os.path.relpath(root, src_sd)
+                    target_root = os.path.join(dst_sd, rel_path) if rel_path != "." else dst_sd
+                    os.makedirs(target_root, exist_ok=True)
 
-                    if os.path.isfile(s_file):
+                    for f in files:
+                        s_file = os.path.join(root, f)
+                        d_file = os.path.join(target_root, f)
                         if not os.path.exists(d_file) or force:
                             shutil.copy2(s_file, d_file)
                             copied_files.append(d_file)

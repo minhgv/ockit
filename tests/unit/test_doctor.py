@@ -23,6 +23,7 @@ class TestDoctor(unittest.TestCase):
         res = run_doctor(project_root=self.temp_root)
         self.assertTrue(res["git_installed"])
         self.assertIn(".opencode/agents directory missing", res["errors"])
+        self.assertIn(".opencode/skills directory missing", res["errors"])
 
 
 if __name__ == "__main__":

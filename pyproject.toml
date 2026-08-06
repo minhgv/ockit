@@ -23,4 +23,4 @@ ockit = "ockit.cli:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-"*" = ["templates/**/*", "templates/**/.*"]
+"*" = ["templates/**/*", "templates/**/.*", "templates/**/**/*", "templates/**/**/.*"]

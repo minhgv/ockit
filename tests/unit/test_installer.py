@@ -19,8 +19,11 @@ class TestInstaller(unittest.TestCase):
 
         # Create dummy template structure
         os.makedirs(os.path.join(self.temp_templates, "agents"))
+        os.makedirs(os.path.join(self.temp_templates, "skills", "ba-expert"))
         with open(os.path.join(self.temp_templates, "agents", "planner.md"), "w") as f:
             f.write("# Dummy Planner")
+        with open(os.path.join(self.temp_templates, "skills", "ba-expert", "SKILL.md"), "w") as f:
+            f.write("# Dummy BA Skill")
 
     def tearDown(self):
         shutil.rmtree(self.temp_templates, ignore_errors=True)
@@ -32,6 +35,7 @@ class TestInstaller(unittest.TestCase):
 
         self.assertEqual(res["status"], "success")
         self.assertTrue(os.path.exists(os.path.join(self.temp_target, ".opencode", "agents", "planner.md")))
+        self.assertTrue(os.path.exists(os.path.join(self.temp_target, ".opencode", "skills", "ba-expert", "SKILL.md")))
 
 
 if __name__ == "__main__":
