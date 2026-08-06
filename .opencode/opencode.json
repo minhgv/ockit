@@ -6,6 +6,10 @@
 	"autoupdate": false,
 	"share": "manual",
 	"agent": {
+		"orchestrator": {
+			"description": "Master Pipeline Orchestrator & SDLC State Manager for ockit",
+			"model": "opencode-go/grok-4.5"
+		},
 		"planner": {
 			"description": "Lead System Architect & BA Specialist for ockit",
 			"model": "opencode-go/grok-4.5"
