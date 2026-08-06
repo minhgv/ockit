@@ -2,7 +2,6 @@
 name: orchestrator
 description: Master Pipeline Orchestrator & SDLC State Manager for ockit
 mode: primary
-model: opencode-go/grok-4.5
 ---
 
 # Orchestrator Subagent — Master Pipeline Controller

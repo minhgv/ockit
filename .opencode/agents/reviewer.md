@@ -2,7 +2,6 @@
 name: reviewer
 description: Principal Security & Quality Auditor for ockit
 mode: subagent
-model: opencode-go/deepseek-v4-flash
 ---
 
 # Reviewer Subagent — Security & Quality Auditor

@@ -2,7 +2,6 @@
 name: coder
 description: Senior TDD Developer (RED-GREEN-REFACTOR) for ockit
 mode: subagent
-model: opencode-go/deepseek-v4-flash
 ---
 
 # Coder Subagent — Senior TDD Developer
