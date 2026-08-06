@@ -60,7 +60,10 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
     skills_dir = os.path.join(opencode_dir, "skills")
     workflows_dir = os.path.join(opencode_dir, "workflows")
 
-    expected_agents = ["orchestrator.md", "planner.md", "coder.md", "reviewer.md", "qa.md"]
+    expected_agents = [
+        "orchestrator.md", "planner.md", "coder.md", "reviewer.md", "qa.md",
+        "compaction.md", "explore.md", "general.md"
+    ]
     missing_agents = []
 
     if os.path.exists(agents_dir):

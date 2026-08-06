@@ -8,11 +8,11 @@
 	"agent": {
 		"orchestrator": {
 			"description": "Master Pipeline Orchestrator & SDLC State Manager for ockit",
-			"model": "opencode-go/grok-4.5"
+			"model": "opencode-go/deepseek-v4-flash"
 		},
 		"planner": {
 			"description": "Lead System Architect & BA Specialist for ockit",
-			"model": "opencode-go/grok-4.5"
+			"model": "opencode-go/mimo-v2.5"
 		},
 		"coder": {
 			"description": "Senior TDD Developer (RED-GREEN-REFACTOR)",
@@ -42,18 +42,6 @@
 			"description": "General-purpose subagent for fast, well-defined tasks; delegates complexity quickly",
 			"model": "opencode-go/deepseek-v4-flash"
 		},
-		"plan": {
-			"description": "Primary planning agent for architecture and multi-phase execution",
-			"model": "opencode-go/grok-4.5"
-		},
-		"review": {
-			"description": "Read-only bug scanner (findings only; remediate via /fix /create /plan)",
-			"model": "opencode-go/deepseek-v4-flash"
-		},
-		"vision": {
-			"description": "Visual content specialist for multimodal analysis and UI/UX guidance",
-			"model": "opencode-go/mimo-v2.5"
-		}
 	},
 	"compaction": {
 		"auto": true,
