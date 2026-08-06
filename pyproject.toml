@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ockit"
-version = "1.0.0-MVP"
+version = "1.0.0.dev1"
 description = "OpenCode Kit (ockit) — OpenCode-Native Autonomous Agent Engineering Scaffold & Plugin Suite"
 readme = "README.md"
 authors = [
