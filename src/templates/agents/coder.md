@@ -1,7 +1,7 @@
 ---
 name: coder
-description: Senior Developer (TDD RED-GREEN-REFACTOR) for ockit
-model: anthropic/claude-3-5-sonnet
+description: Senior TDD Developer (RED-GREEN-REFACTOR) for ockit
+model: opencode-go/deepseek-v4-flash
 ---
 
 # Coder Subagent — Senior TDD Developer

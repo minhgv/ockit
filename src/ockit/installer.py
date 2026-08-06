@@ -38,6 +38,13 @@ class OckitInstaller:
                             shutil.copy2(s_file, d_file)
                             copied_files.append(d_file)
 
+        # Copy opencode.json config file
+        src_opencode_json = os.path.join(self.templates_dir, "opencode.json")
+        dst_opencode_json = os.path.join(opencode_dir, "opencode.json")
+        if os.path.exists(src_opencode_json) and (not os.path.exists(dst_opencode_json) or force):
+            shutil.copy2(src_opencode_json, dst_opencode_json)
+            copied_files.append(dst_opencode_json)
+
         # Copy mcp_config.json if available
         src_mcp = os.path.join(self.templates_dir, "mcp_config.json")
         dst_mcp = os.path.join(opencode_dir, "mcp_config.json")

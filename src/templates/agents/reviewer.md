@@ -1,7 +1,7 @@
 ---
 name: reviewer
-description: Principal Code & Security Auditor for ockit
-model: anthropic/claude-3-5-sonnet
+description: Principal Security & Quality Auditor for ockit
+model: opencode-go/deepseek-v4-flash
 ---
 
 # Reviewer Subagent — Security & Quality Auditor

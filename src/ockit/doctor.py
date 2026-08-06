@@ -3,6 +3,7 @@ doctor.py — Environment health probe & diagnostics for ockit
 """
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import subprocess
@@ -13,6 +14,7 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
         "git_installed": False,
         "opencode_installed": False,
         "python_version": "",
+        "config_json_valid": False,
         "agents_valid": False,
         "plugins_valid": False,
         "skills_valid": False,
@@ -35,8 +37,24 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
     # 2. Check Python
     results["python_version"] = subprocess.getoutput("python3 --version")
 
-    # 3. Check .opencode directory structure
+    # 3. Check .opencode/opencode.json
     opencode_dir = os.path.join(project_root, ".opencode")
+    config_json_path = os.path.join(opencode_dir, "opencode.json")
+
+    if os.path.exists(config_json_path):
+        try:
+            with open(config_json_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                if "provider" in data and "agent" in data:
+                    results["config_json_valid"] = True
+                else:
+                    results["warnings"].append(".opencode/opencode.json missing 'provider' or 'agent' keys")
+        except Exception as e:  # noqa: BLE001
+            results["errors"].append(f".opencode/opencode.json invalid JSON: {e}")
+    else:
+        results["errors"].append(".opencode/opencode.json configuration file missing")
+
+    # 4. Check .opencode agents, plugins, skills, workflows
     agents_dir = os.path.join(opencode_dir, "agents")
     plugins_dir = os.path.join(opencode_dir, "plugins")
     skills_dir = os.path.join(opencode_dir, "skills")
@@ -57,7 +75,7 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
     else:
         results["errors"].append(".opencode/agents directory missing")
 
-    # 4. Check plugins
+    # Check plugins
     expected_plugins = ["ockit-quality-gate.js", "ockit-ba-traceability.js", "ockit-tdd-runner.js"]
     missing_plugins = []
 
@@ -73,7 +91,7 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
     else:
         results["errors"].append(".opencode/plugins directory missing")
 
-    # 5. Check skills (12 skills)
+    # Check skills (12 skills)
     expected_skills = [
         "ba-expert", "brainstorming", "grill-me", "problem-solving",
         "qa-auditor", "qa-reproducer", "qa-test-gen", "quality-gate",
@@ -93,7 +111,7 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
     else:
         results["errors"].append(".opencode/skills directory missing")
 
-    # 6. Check 14 Workflows / Prompts
+    # Check 14 Workflows
     expected_workflows = [
         "brainstorm.md", "doctor.md", "gate.md", "grill.md", "init.md",
         "learn.md", "migrate.md", "pipeline.md", "plan.md", "qa.md",

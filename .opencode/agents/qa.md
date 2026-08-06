@@ -1,7 +1,7 @@
 ---
 name: qa
-description: E2E QA Automation Engineer for ockit
-model: openai/gpt-4o-mini
+description: E2E QA Automation & Chaos Engineer for ockit
+model: opencode-go/deepseek-v4-flash
 ---
 
 # QA Subagent — E2E Automation & Chaos Engineer

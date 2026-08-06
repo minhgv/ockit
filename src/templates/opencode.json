@@ -1,7 +1,27 @@
 {
 	"$schema": "https://opencode.ai/config.json",
+	"model": "opencode-go/deepseek-v4-flash",
+	"small_model": "opencode/gpt-5-nano",
 	"lsp": false,
+	"autoupdate": false,
+	"share": "manual",
 	"agent": {
+		"planner": {
+			"description": "Lead System Architect & BA Specialist for ockit",
+			"model": "opencode-go/grok-4.5"
+		},
+		"coder": {
+			"description": "Senior TDD Developer (RED-GREEN-REFACTOR)",
+			"model": "opencode-go/deepseek-v4-flash"
+		},
+		"reviewer": {
+			"description": "Principal Security & Quality Auditor",
+			"model": "opencode-go/deepseek-v4-flash"
+		},
+		"qa": {
+			"description": "E2E QA Automation & Chaos Engineer",
+			"model": "opencode-go/deepseek-v4-flash"
+		},
 		"build": {
 			"description": "Primary development agent",
 			"model": "opencode-go/deepseek-v4-flash"
@@ -31,7 +51,6 @@
 			"model": "opencode-go/mimo-v2.5"
 		}
 	},
-	"autoupdate": false,
 	"compaction": {
 		"auto": true,
 		"reserved": 2048
@@ -75,7 +94,6 @@
 			"type": "local"
 		}
 	},
-	"model": "opencode-go/deepseek-v4-flash",
 	"permission": {
 		"bash": {
 			"*": "allow",
@@ -119,6 +137,10 @@
 		}
 	},
 	"plugin": [
+		"./plugins/ockit-quality-gate.js",
+		"./plugins/ockit-ba-traceability.js",
+		"./plugins/ockit-tdd-runner.js",
+		"./plugins/ockit-linter-fixer.js",
 		"@tarquinen/opencode-dcp@3.1.12",
 		"@franlol/opencode-md-table-formatter@0.0.3",
 		"openslimedit@latest",
@@ -369,8 +391,6 @@
 			}
 		}
 	},
-	"share": "manual",
-	"small_model": "opencode/gpt-5-nano",
 	"watcher": {
 		"ignore": [
 			"node_modules/**",
