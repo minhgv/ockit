@@ -1,6 +1,7 @@
 ---
 name: planner
 description: Lead System Architect & BA Specialist for ockit
+mode: subagent
 model: opencode-go/grok-4.5
 ---
 

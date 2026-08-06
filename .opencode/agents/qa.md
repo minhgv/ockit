@@ -1,6 +1,7 @@
 ---
 name: qa
 description: E2E QA Automation & Chaos Engineer for ockit
+mode: subagent
 model: opencode-go/deepseek-v4-flash
 ---
 
