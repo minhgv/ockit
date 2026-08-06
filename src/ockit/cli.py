@@ -1,6 +1,7 @@
 """
 cli.py — Main CLI entrypoint for ockit command line tool
 """
+
 from __future__ import annotations
 
 import argparse
@@ -19,20 +20,34 @@ def main():
     subparsers = parser.add_subparsers(dest="command", help="Available subcommands")
 
     # init command
-    init_parser = subparsers.add_parser("init", help="Initialize ockit scaffold into a target directory")
-    init_parser.add_argument("--target", default=".", help="Target directory (default: current dir)")
-    init_parser.add_argument("--lang", default="python", help="Target programming language")
-    init_parser.add_argument("--force", action="store_true", help="Force overwrite existing files")
+    init_parser = subparsers.add_parser(
+        "init", help="Initialize ockit scaffold into a target directory"
+    )
+    init_parser.add_argument(
+        "--target", default=".", help="Target directory (default: current dir)"
+    )
+    init_parser.add_argument(
+        "--lang", default="python", help="Target programming language"
+    )
+    init_parser.add_argument(
+        "--force", action="store_true", help="Force overwrite existing files"
+    )
 
     # doctor command
     subparsers.add_parser("doctor", help="Run system health probe and diagnostics")
 
     # verify command
-    subparsers.add_parser("verify", help="Verify project requirement traceability and workflow sync")
+    subparsers.add_parser(
+        "verify", help="Verify project requirement traceability and command sync"
+    )
 
     # sync command
-    sync_parser = subparsers.add_parser("sync", help="Synchronize active assets with templates")
-    sync_parser.add_argument("--sync", action="store_true", help="Perform synchronization write")
+    sync_parser = subparsers.add_parser(
+        "sync", help="Synchronize active assets with templates"
+    )
+    sync_parser.add_argument(
+        "--sync", action="store_true", help="Perform synchronization write"
+    )
 
     args = parser.parse_args()
 
@@ -43,8 +58,12 @@ def main():
     if args.command == "init":
         print(f"🚀 Initializing ockit scaffold into target: {args.target}")
         installer = OckitInstaller(templates_dir=templates_dir)
-        res = installer.initialize_project(target_dir=args.target, lang=args.lang, force=args.force)
-        print(f"✅ Scaffold initialized successfully. Copied {len(res['copied_files'])} files into .opencode/")
+        res = installer.initialize_project(
+            target_dir=args.target, lang=args.lang, force=args.force
+        )
+        print(
+            f"✅ Scaffold initialized successfully. Copied {len(res['copied_files'])} files into .opencode/"
+        )
         sys.exit(0)
 
     elif args.command == "doctor":
@@ -53,10 +72,16 @@ def main():
         print("==================================================")
         res = run_doctor(project_root=project_root)
         print(f"Git Installed: {'✅ Yes' if res['git_installed'] else '❌ No'}")
-        print(f"OpenCode CLI: {'✅ Yes' if res['opencode_installed'] else '⚠️ Not in PATH'}")
+        print(
+            f"OpenCode CLI: {'✅ Yes' if res['opencode_installed'] else '⚠️ Not in PATH'}"
+        )
         print(f"Python Version: {res['python_version']}")
-        print(f"Subagent Specs: {'✅ Valid' if res['agents_valid'] else '❌ Errors detected'}")
-        print(f"Native Plugins: {'✅ Valid' if res['plugins_valid'] else '⚠️ Warnings detected'}")
+        print(
+            f"Subagent Specs: {'✅ Valid' if res['agents_valid'] else '❌ Errors detected'}"
+        )
+        print(
+            f"Native Plugins: {'✅ Valid' if res['plugins_valid'] else '⚠️ Warnings detected'}"
+        )
 
         if res["errors"]:
             print("\n❌ Errors:")

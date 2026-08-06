@@ -1,7 +1,7 @@
 ---
 name: qa
 description: E2E QA Automation & Chaos Engineer for ockit
-mode: subagent
+mode: all
 ---
 
 # QA Subagent — E2E Automation & Chaos Engineer

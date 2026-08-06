@@ -1,20 +1,25 @@
 /**
  * ockit-linter-fixer.js — OpenCode Native Linter & Shebang Fixer Plugin
- * Fixes shebang executable permissions and formats python annotations.
+ * After a file is edited or written, makes it executable when it starts
+ * with a shebang (#!) line.
  */
-const fs = require('fs');
+import fs from "node:fs";
 
-module.exports = {
-  name: 'ockit-linter-fixer',
-  version: '1.0.0',
-  fixPermissions: function (filePath) {
-    if (fs.existsSync(filePath)) {
-      const content = fs.readFileSync(filePath, 'utf-8');
-      if (content.startsWith('#!')) {
-        fs.chmodSync(filePath, 0o755);
-        return true;
-      }
-    }
-    return false;
-  }
+export const OckitLinterFixer = async () => {
+	return {
+		"tool.execute.after": async (input) => {
+			if (input.tool !== "edit" && input.tool !== "write") {
+				return;
+			}
+			const args = input.args ?? {};
+			const filePath = args.filePath ?? args.file_path ?? args.path;
+			if (typeof filePath !== "string" || !fs.existsSync(filePath)) {
+				return;
+			}
+			const content = fs.readFileSync(filePath, "utf-8");
+			if (content.startsWith("#!")) {
+				fs.chmodSync(filePath, 0o755);
+			}
+		},
+	};
 };

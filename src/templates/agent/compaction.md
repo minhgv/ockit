@@ -1,7 +1,7 @@
 ---
 name: compaction
 description: Session summarizer for context continuity across compactions
-mode: subagent
+mode: all
 ---
 
 # Compaction Subagent — Session Summarizer

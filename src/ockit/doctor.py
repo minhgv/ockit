@@ -1,6 +1,7 @@
 """
 doctor.py — Environment health probe & diagnostics for ockit
 """
+
 from __future__ import annotations
 
 import json
@@ -18,7 +19,7 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
         "agents_valid": False,
         "plugins_valid": False,
         "skills_valid": False,
-        "workflows_valid": False,
+        "commands_valid": False,
         "errors": [],
         "warnings": [],
     }
@@ -48,21 +49,29 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
                 if "provider" in data and "agent" in data:
                     results["config_json_valid"] = True
                 else:
-                    results["warnings"].append(".opencode/opencode.json missing 'provider' or 'agent' keys")
+                    results["warnings"].append(
+                        ".opencode/opencode.json missing 'provider' or 'agent' keys"
+                    )
         except Exception as e:  # noqa: BLE001
             results["errors"].append(f".opencode/opencode.json invalid JSON: {e}")
     else:
         results["errors"].append(".opencode/opencode.json configuration file missing")
 
-    # 4. Check .opencode agent, plugin, skill, workflow (OpenCode standard singular directory names)
+    # 4. Check .opencode agent, plugin, skill, command (OpenCode standard singular directory names)
     agents_dir = os.path.join(opencode_dir, "agent")
     plugins_dir = os.path.join(opencode_dir, "plugin")
     skills_dir = os.path.join(opencode_dir, "skill")
-    workflows_dir = os.path.join(opencode_dir, "workflow")
+    commands_dir = os.path.join(opencode_dir, "command")
 
     expected_agents = [
-        "orchestrator.md", "planner.md", "coder.md", "reviewer.md", "qa.md",
-        "compaction.md", "explore.md", "general.md"
+        "orchestrator.md",
+        "planner.md",
+        "coder.md",
+        "reviewer.md",
+        "qa.md",
+        "compaction.md",
+        "explore.md",
+        "general.md",
     ]
     missing_agents = []
 
@@ -79,7 +88,11 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
         results["errors"].append(".opencode/agent directory missing")
 
     # Check plugins
-    expected_plugins = ["ockit-quality-gate.js", "ockit-ba-traceability.js", "ockit-tdd-runner.js"]
+    expected_plugins = [
+        "ockit-quality-gate.js",
+        "ockit-ba-traceability.js",
+        "ockit-tdd-runner.js",
+    ]
     missing_plugins = []
 
     if os.path.exists(plugins_dir):
@@ -90,15 +103,24 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
         if not missing_plugins:
             results["plugins_valid"] = True
         else:
-            results["warnings"].append(f"Missing recommended plugins: {missing_plugins}")
+            results["warnings"].append(
+                f"Missing recommended plugins: {missing_plugins}"
+            )
     else:
         results["errors"].append(".opencode/plugin directory missing")
 
     # Check skills (12 skills)
     expected_skills = [
-        "ba-expert", "brainstorming", "grill-me", "problem-solving",
-        "qa-auditor", "qa-reproducer", "qa-test-gen", "quality-gate",
-        "tdd-workflow", "writing-skills"
+        "ba-expert",
+        "brainstorming",
+        "grill-me",
+        "problem-solving",
+        "qa-auditor",
+        "qa-reproducer",
+        "qa-test-gen",
+        "quality-gate",
+        "tdd-workflow",
+        "writing-skills",
     ]
     missing_skills = []
 
@@ -114,24 +136,35 @@ def run_doctor(project_root: str) -> dict[str, str | list[str] | bool]:
     else:
         results["errors"].append(".opencode/skill directory missing")
 
-    # Check 14 Workflows
-    expected_workflows = [
-        "brainstorm.md", "doctor.md", "gate.md", "grill.md", "init.md",
-        "learn.md", "migrate.md", "pipeline.md", "plan.md", "qa.md",
-        "review.md", "safe-pipeline.md", "schedule.md", "solve.md"
+    # Check 14 Commands
+    expected_commands = [
+        "brainstorm.md",
+        "doctor.md",
+        "gate.md",
+        "grill.md",
+        "init.md",
+        "learn.md",
+        "migrate.md",
+        "pipeline.md",
+        "plan.md",
+        "qa.md",
+        "review.md",
+        "safe-pipeline.md",
+        "schedule.md",
+        "solve.md",
     ]
-    missing_workflows = []
+    missing_commands = []
 
-    if os.path.exists(workflows_dir):
-        for wf in expected_workflows:
-            wf_path = os.path.join(workflows_dir, wf)
-            if not os.path.exists(wf_path):
-                missing_workflows.append(wf)
-        if not missing_workflows:
-            results["workflows_valid"] = True
+    if os.path.exists(commands_dir):
+        for cmd in expected_commands:
+            cmd_path = os.path.join(commands_dir, cmd)
+            if not os.path.exists(cmd_path):
+                missing_commands.append(cmd)
+        if not missing_commands:
+            results["commands_valid"] = True
         else:
-            results["warnings"].append(f"Missing workflows: {missing_workflows}")
+            results["warnings"].append(f"Missing commands: {missing_commands}")
     else:
-        results["errors"].append(".opencode/workflow directory missing")
+        results["errors"].append(".opencode/command directory missing")
 
     return results

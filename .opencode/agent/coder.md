@@ -1,7 +1,7 @@
 ---
 name: coder
 description: Senior TDD Developer (RED-GREEN-REFACTOR) for ockit
-mode: subagent
+mode: all
 ---
 
 # Coder Subagent — Senior TDD Developer

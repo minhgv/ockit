@@ -1,7 +1,7 @@
 ---
 name: general
 description: General-purpose subagent for fast, well-defined tasks; delegates complexity quickly
-mode: subagent
+mode: all
 ---
 
 # General Subagent — Fast Task Runner

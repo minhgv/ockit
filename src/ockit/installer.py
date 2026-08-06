@@ -1,6 +1,7 @@
 """
 installer.py — Project scaffolder logic for `ockit init`
 """
+
 from __future__ import annotations
 
 import os
@@ -8,18 +9,19 @@ import shutil
 
 
 class OckitInstaller:
-
     def __init__(self, templates_dir: str):
         self.templates_dir = os.path.abspath(templates_dir)
 
-    def initialize_project(self, target_dir: str, lang: str = "python", force: bool = False) -> dict[str, str | list[str]]:
+    def initialize_project(
+        self, target_dir: str, lang: str = "python", force: bool = False
+    ) -> dict[str, str | list[str]]:
         target_dir = os.path.abspath(target_dir)
         opencode_dir = os.path.join(target_dir, ".opencode")
 
         os.makedirs(opencode_dir, exist_ok=True)
         copied_files: list[str] = []
 
-        subdirs = ["agent", "plugin", "workflow", "prompt", "skill"]
+        subdirs = ["agent", "plugin", "command", "skill"]
         for sd in subdirs:
             src_sd = os.path.join(self.templates_dir, sd)
             dst_sd = os.path.join(opencode_dir, sd)
@@ -28,7 +30,9 @@ class OckitInstaller:
             if os.path.exists(src_sd):
                 for root, dirs, files in os.walk(src_sd):
                     rel_path = os.path.relpath(root, src_sd)
-                    target_root = os.path.join(dst_sd, rel_path) if rel_path != "." else dst_sd
+                    target_root = (
+                        os.path.join(dst_sd, rel_path) if rel_path != "." else dst_sd
+                    )
                     os.makedirs(target_root, exist_ok=True)
 
                     for f in files:
@@ -41,7 +45,9 @@ class OckitInstaller:
         # Copy opencode.json config file
         src_opencode_json = os.path.join(self.templates_dir, "opencode.json")
         dst_opencode_json = os.path.join(opencode_dir, "opencode.json")
-        if os.path.exists(src_opencode_json) and (not os.path.exists(dst_opencode_json) or force):
+        if os.path.exists(src_opencode_json) and (
+            not os.path.exists(dst_opencode_json) or force
+        ):
             shutil.copy2(src_opencode_json, dst_opencode_json)
             copied_files.append(dst_opencode_json)
 

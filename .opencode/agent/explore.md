@@ -1,7 +1,7 @@
 ---
 name: explore
 description: Fast codebase search, patterns, and external research specialist
-mode: subagent
+mode: all
 ---
 
 # Explore Subagent — Codebase & Research Specialist

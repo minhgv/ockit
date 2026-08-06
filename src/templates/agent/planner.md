@@ -1,7 +1,7 @@
 ---
 name: planner
 description: Lead System Architect & BA Specialist for ockit
-mode: subagent
+mode: all
 ---
 
 # Planner Subagent — Lead Architect & Business Analyst

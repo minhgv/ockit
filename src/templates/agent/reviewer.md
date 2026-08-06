@@ -1,7 +1,7 @@
 ---
 name: reviewer
 description: Principal Security & Quality Auditor for ockit
-mode: subagent
+mode: all
 ---
 
 # Reviewer Subagent — Security & Quality Auditor

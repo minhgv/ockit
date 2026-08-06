@@ -1,6 +1,6 @@
 # ockit — OpenCode Kit (v1.0)
 
-> **OpenCode-Native Autonomous Agent Engineering Scaffold & Plugin Suite** — Designed exclusively for **OpenCode CLI (`opencode`)**. Provides multi-provider flexibility, native OpenCode plugins, 14 slash workflows, Business Analysis (BA) RTM traceability, strict TDD execution, and isolated Git worktree management.
+> **OpenCode-Native Autonomous Agent Engineering Scaffold & Plugin Suite** — Designed exclusively for **OpenCode CLI (`opencode`)**. Provides multi-provider flexibility, native OpenCode plugins, 14 slash commands, Business Analysis (BA) RTM traceability, strict TDD execution, and isolated Git worktree management.
 
 ---
 
@@ -18,13 +18,13 @@
    - `reviewer`: Principal Code & Security Auditor
    - `qa`: E2E QA Automation Engineer
 
-3. **14 Native OpenCode Workflows (`.opencode/workflows/`)**:
+3. **14 Native OpenCode Commands (`.opencode/command/`)**:
    `/brainstorm`, `/plan`, `/grill`, `/pipeline`, `/safe-pipeline`, `/gate`, `/review`, `/qa`, `/solve`, `/doctor`, `/init`, `/learn`, `/schedule`, `/migrate`.
 
 4. **Dedicated `ockit` CLI Tool**:
    - `ockit init [target]`: Scaffold `.opencode/` into any target project directory.
    - `ockit doctor`: Probe environment, toolchains, and plugin health.
-   - `ockit verify`: Audit RTM traceability and workflow compliance.
+   - `ockit verify`: Audit RTM traceability and command compliance.
    - `ockit sync`: Synchronize active assets with `src/templates/`.
 
 ---
