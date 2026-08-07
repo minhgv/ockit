@@ -38,15 +38,21 @@ export const OckitBaTraceability = async ({ client }) => {
 				return;
 			}
 			if (!content.includes("RTM") || !content.includes("Edge Case")) {
-				await client.app.log({
-					body: {
-						service: "ockit-ba-traceability",
-						level: "warn",
-						message:
-							"Specification document is missing explicit RTM or Edge Case Matrix section",
-						extra: { filePath },
-					},
-				});
+				if (client?.app?.log) {
+					try {
+						await client.app.log({
+							body: {
+								service: "ockit-ba-traceability",
+								level: "warn",
+								message:
+									"Specification document is missing explicit RTM or Edge Case Matrix section",
+								extra: { filePath },
+							},
+						});
+					} catch {
+						// Logging is best-effort — must never break the tool chain.
+					}
+				}
 			}
 		},
 	};

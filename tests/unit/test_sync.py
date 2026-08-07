@@ -215,3 +215,44 @@ class TestSyncWrite:
         assert report.exit_code == 1
         ok = SyncReport(mode="sync", drift=[item])
         assert ok.exit_code == 0
+
+
+# ---------------------------------------------------------------------------
+# R-003: active plugin mirror MUST stay byte-identical to packaged template.
+# Sync invariant — applies to all 4 packaged plugins (ockit sync contract).
+# ---------------------------------------------------------------------------
+
+_PLUGIN_NAMES = [
+    "ockit-ba-traceability.js",
+    "ockit-quality-gate.js",
+    "ockit-linter-fixer.js",
+    "ockit-tdd-runner.js",
+]
+
+
+def test_r003_ba_traceability_active_equals_template():
+    """R-003 / E-002: every active plugin file MUST be byte-identical to its
+    packaged template mirror (zero sync drift)."""
+    from pathlib import Path
+
+    repo_root = Path(__file__).resolve().parents[2]
+    active_dir = repo_root / ".opencode" / "plugin"
+    template_dir = repo_root / "src" / "ockit" / "templates" / "plugin"
+    for name in _PLUGIN_NAMES:
+        active = active_dir / name
+        template = template_dir / name
+        assert active.exists(), (
+            "What=active plugin file missing; "
+            f"Context={active}; "
+            "Fix=run `ockit sync` or restore the active plugin from packaged template."
+        )
+        assert template.exists(), (
+            "What=packaged plugin template missing; "
+            f"Context={template}; "
+            "Fix=reinstall ockit (pip install --force-reinstall ockit)."
+        )
+        assert active.read_bytes() == template.read_bytes(), (
+            "What=active plugin diverged from packaged template (sync drift); "
+            f"Context=plugin='{name}'; active={active} template={template}; "
+            "Fix=run `ockit sync` to mirror template → active (byte-identical)."
+        )
