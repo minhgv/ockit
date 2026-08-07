@@ -55,9 +55,18 @@ def test_no_hardcoded_model_pins(cfg):
     # Top-level model selection omitted so the consumer's global config applies.
     assert "model" not in data, "top-level 'model' pin must be omitted (portable)"
     assert "small_model" not in data, "top-level 'small_model' pin must be omitted"
+    # Agent-level model pins are ALLOWED only when uniform and sanctioned.
+    # The ockit agent suite defaults to the opencode-go gateway model so every
+    # agent/subagent runs on the same cheap-fast model out of the box.
+    _SANCTIONED_AGENT_MODEL = "opencode-go/deepseek-v4-flash"
     agents = data.get("agent", {})
+    assert agents, "agent section must exist in portable config"
     for name, spec in agents.items():
-        assert "model" not in spec, f"agent '{name}' carries a model pin"
+        assert "model" in spec, f"agent '{name}' must carry a model pin"
+        assert spec["model"] == _SANCTIONED_AGENT_MODEL, (
+            f"agent '{name}' model pin '{spec['model']}' is not the sanctioned "
+            f"'{_SANCTIONED_AGENT_MODEL}' (uniform default required)"
+        )
 
 
 @pytest.mark.parametrize("cfg", _configs())
