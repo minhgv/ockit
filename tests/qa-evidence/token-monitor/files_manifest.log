@@ -1,0 +1,26 @@
+# token-monitor files manifest 2026-08-07T10:56:34Z
+## active .opencode/plugin/token-monitor
+config.ts
+index.integration.test.ts
+index.test.ts
+index.ts
+lifecycle.ts
+solid-runtime.ts
+store-runtime.ts
+token-panel.tsx
+token-state.ts
+## template src/ockit/templates/plugin/token-monitor
+config.ts
+index.integration.test.ts
+index.test.ts
+index.ts
+lifecycle.ts
+solid-runtime.ts
+store-runtime.ts
+token-panel.tsx
+token-state.ts
+## harness mirror (cmp active vs template)
+IDENTICAL: tsconfig.json
+IDENTICAL: vitest.config.ts
+IDENTICAL: .gitignore
+IDENTICAL: plugin/tsconfig.typecheck.json

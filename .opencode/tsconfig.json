@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"allowJs": true,
+		"strict": true,
+		"noImplicitAny": false,
+		"noEmit": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"jsx": "react-jsx",
+		"jsxImportSource": "@opentui/solid",
+		"types": ["node", "bun-types"]
+	},
+	"include": ["plugin/**/*.ts", "plugin/**/*.tsx"],
+	"exclude": ["node_modules"]
+}

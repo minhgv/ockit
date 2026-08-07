@@ -1,0 +1,6 @@
+# token-monitor type-check (tsc --noEmit, active .opencode) 2026-08-07T10:56:28Z
+
+> .opencode@1.0.0 type-check
+> tsc --noEmit -p plugin/tsconfig.typecheck.json
+
+EXIT=0

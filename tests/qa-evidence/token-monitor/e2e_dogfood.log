@@ -1,0 +1,14 @@
+# ockit init dogfood E2E (US-02) 2026-08-07T10:44:41Z
+## ockit init --target <in-repo dir> -> Copied 72 files
+## scaffolded .opencode/plugin/token-monitor/ : config.ts index.integration.test.ts index.test.ts index.ts lifecycle.ts solid-runtime.ts store-runtime.ts token-panel.tsx token-state.ts 
+## scaffolded tui.json registers: ./plugin/token-monitor 
+## npm install --prefix target/.opencode : OK (153 pkgs, source pins)
+## npm --prefix target/.opencode test : 52 passed (2 files)
+## qa-reproducer MRE: N/A — no runtime bugs surfaced during dogfood
+
+# ockit init dogfood E2E re-run (post P2-fix) 2026-08-07T10:56:50Z
+## template-tree scaffold (init copy semantics) -> /tmp/ockit-scaffold/.opencode
+## npm install --prefix scaffold : OK
+## npm --prefix scaffold test : 52 passed (2 files)
+## npm --prefix scaffold run type-check : EXIT=0 (P2-B fix proof: tsconfig harness now ships in templates)
+## ockit sync --check (active vs templates): 1 residual item (package-lock.json, deliberate active-only — SPEC R-012 note)

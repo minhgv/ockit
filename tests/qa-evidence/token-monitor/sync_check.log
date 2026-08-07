@@ -1,0 +1,5 @@
+==================================================
+   ockit Template Synchronization Audit (check)
+==================================================
+  [DRIFT] missing_in_templates: package-lock.json
+❌ Template drift detected (1 item(s)). Run 'ockit sync --sync' to copy packaged templates into active .opencode/.

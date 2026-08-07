@@ -1,0 +1,15 @@
+# npm install --prefix .opencode (2026-08-07T10:44:00Z)
+## lockfile versions
+				"@opencode-ai/plugin": "^1.18.12",
+				"@opentui/core": ">=0.4.5",
+				"@opentui/core": "0.4.5",
+				"@opentui/core": {
+				"@opentui/solid": ">=0.4.5"
+				"@opentui/solid": "0.4.5",
+				"@opentui/solid": {
+				"solid-js": "^1.9.12"
+				"solid-js": "1.9.12"
+				"solid-js": {
+## @opencode-ai/sdk version
+		"node_modules/@opencode-ai/sdk": {
+			"version": "1.18.15",
