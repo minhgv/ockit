@@ -26,11 +26,11 @@
 		},
 		"general": {
 			"description": "General-purpose subagent for fast, well-defined tasks; delegates complexity quickly",
-			"model": "google-antigravity/gemini-3.6-high"
+			"model": "google-antigravity/gemini-3.6-flash-high"
 		},
 		"explore": {
 			"description": "Fast codebase search specialist",
-			"model": "google-antigravity/gemini-3.6-flash"
+			"model": "google-antigravity/gemini-3.6-flash-low"
 		}
 	},
 	"compaction": {
@@ -39,8 +39,21 @@
 	},
 	"formatter": {
 		"biome": {
-			"command": ["npx", "@biomejs/biome", "check", "--write", "$FILE"],
-			"extensions": [".js", ".jsx", ".ts", ".tsx", ".json", ".jsonc"]
+			"command": [
+				"npx",
+				"@biomejs/biome",
+				"check",
+				"--write",
+				"$FILE"
+			],
+			"extensions": [
+				".js",
+				".jsx",
+				".ts",
+				".tsx",
+				".json",
+				".jsonc"
+			]
 		}
 	},
 	"permission": {
