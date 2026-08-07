@@ -1,0 +1,15 @@
+
+> .opencode@1.0.0 test
+> vitest run
+
+
+ RUN  v3.2.7 <REPO>/.opencode
+
+ ✓ plugin/token-monitor/index.integration.test.ts (4 tests) 74ms
+ ✓ plugin/token-monitor/index.test.ts (48 tests) 121ms
+
+ Test Files  2 passed (2)
+      Tests  52 passed (52)
+   Start at  17:44:05
+   Duration  473ms (transform 73ms, setup 0ms, collect 142ms, tests 196ms, environment 0ms, prepare 113ms)
+

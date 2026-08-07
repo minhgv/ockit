@@ -1,0 +1,8 @@
+# tui.json content + registration check
+{
+	"$schema": "https://opencode.ai/tui.json",
+	"plugin": ["./plugin/token-monitor"]
+}
+
+## template mirror (cmp):
+IDENTICAL

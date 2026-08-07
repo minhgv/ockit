@@ -11,6 +11,14 @@ only ``node:*`` builtins. The fourth (tdd-runner) imports ``@opencode-ai/plugin`
 which is resolvable via ``.opencode/node_modules`` in this repo, so it too is
 exercised via a dynamic ESM import through a ``node`` subprocess (top-level
 ``await`` requires ESM mode).
+
+R-005: the token-monitor TUI plugin (``plugin/token-monitor/*.ts(x)``) is
+EXCLUDED from this node ESM probe. It is a TypeScript TUI plugin registered via
+``tui.json`` (not ``opencode.json``) and its contract (default export
+``{ id, tui }``, ``sidebar_content`` slot, ``message.updated`` +
+``session.next.step.*`` subscriptions) is exercised by the ported vitest suite
+under ``.opencode`` (``npm --prefix .opencode test``) — see
+``plans/SPEC_token_monitor_plugin.md`` R-005/R-015.
 """
 
 from __future__ import annotations

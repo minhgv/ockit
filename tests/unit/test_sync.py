@@ -256,3 +256,34 @@ def test_r003_ba_traceability_active_equals_template():
             f"Context=plugin='{name}'; active={active} template={template}; "
             "Fix=run `ockit sync` to mirror template → active (byte-identical)."
         )
+
+
+def test_r012_token_monitor_no_drift():
+    """R-012 / E-032: zero sync drift for the token-monitor port scope.
+
+    Scope (SPEC_token_monitor_plugin.md): ``plugin/token-monitor/**``,
+    ``tui.json`` and ``package.json`` must be byte-identical between the active
+    ``.opencode/`` tree and the packaged ``src/ockit/templates/`` tree. Pre-existing
+    out-of-scope drift (e.g. ``.gitignore``, ``package-lock.json``) is excluded.
+    """
+    from pathlib import Path
+
+    repo_root = Path(__file__).resolve().parents[2]
+    report = run_sync(
+        active_dir=str(repo_root / ".opencode"),
+        templates_dir=str(repo_root / "src" / "ockit" / "templates"),
+        mode="check",
+    )
+    in_scope = [
+        item.relative_path
+        for item in report.drift
+        if item.relative_path == "tui.json"
+        or item.relative_path == "package.json"
+        or item.relative_path.startswith("plugin/token-monitor/")
+    ]
+    assert in_scope == [], (
+        "What=token-monitor port drifted between active and templates; "
+        f"Context=in-scope drift: {in_scope}; "
+        "Fix=mirror the active token-monitor files (plugin/, tui.json, package.json) "
+        "into src/ockit/templates/ byte-identically."
+    )

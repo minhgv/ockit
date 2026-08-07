@@ -1,0 +1,4 @@
+
+> .opencode@1.0.0 type-check
+> tsc --noEmit -p plugin/tsconfig.typecheck.json
+

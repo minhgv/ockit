@@ -1,0 +1,21 @@
+# token-monitor files manifest (2026-08-07T10:44:00Z)
+## active .opencode/plugin/token-monitor
+config.ts
+index.integration.test.ts
+index.test.ts
+index.ts
+lifecycle.ts
+solid-runtime.ts
+store-runtime.ts
+token-panel.tsx
+token-state.ts
+## template src/ockit/templates/plugin/token-monitor
+config.ts
+index.integration.test.ts
+index.test.ts
+index.ts
+lifecycle.ts
+solid-runtime.ts
+store-runtime.ts
+token-panel.tsx
+token-state.ts

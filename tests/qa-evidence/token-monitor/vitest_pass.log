@@ -1,0 +1,4 @@
+ ✓ plugin/token-monitor/index.integration.test.ts (4 tests) 74ms
+ ✓ plugin/token-monitor/index.test.ts (48 tests) 121ms
+ Test Files  2 passed (2)
+      Tests  52 passed (52)
