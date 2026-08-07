@@ -12,3 +12,8 @@
 ## npm --prefix scaffold test : 52 passed (2 files)
 ## npm --prefix scaffold run type-check : EXIT=0 (P2-B fix proof: tsconfig harness now ships in templates)
 ## ockit sync --check (active vs templates): 1 residual item (package-lock.json, deliberate active-only — SPEC R-012 note)
+
+# token-monitor hardening E2E (R-001..R-007) 2026-08-07T13:12:54Z
+## scaffold dogfood: npm test 63 passed (56 baseline + 7 chaos); type-check EXIT=0; hardening greps OK
+## chaos probe: 7 tests passed (time-undefined, time-no-completed, step-missing-model, handler isolation, 51-eviction)
+## sync residual: package-lock.json only (documented)
