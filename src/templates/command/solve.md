@@ -9,7 +9,7 @@ Apply systematic problem-solving techniques using the `problem-solving` skill wh
 ## Steps
 
 ### Step 1: Stuck Symptom Diagnosis & Dispatch
-Invoke the **`coder`** subagent (`.agents/agents/coder.md`):
+Invoke the **`coder`** subagent (`.opencode/agent/coder.md`):
 - Load the `problem-solving` skill for `$ARGUMENTS`.
 - Diagnose stuck symptom against the quick dispatch matrix:
   - Complexity spiraling -> Simplification Cascades (`references/simplification-cascades.md`)
@@ -21,5 +21,5 @@ Invoke the **`coder`** subagent (`.agents/agents/coder.md`):
 - Load the corresponding reference file from `references/` and execute the technique systematically.
 
 ### Step 2: Breakthrough Implementation & Verification
-Invoke the **`coder`** subagent (`.agents/agents/coder.md`):
+Invoke the **`coder`** subagent (`.opencode/agent/coder.md`):
 - Implement the refactored logic or simplified architecture, document problem-solving insights, and execute test suite to verify GREEN status.

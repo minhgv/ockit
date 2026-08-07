@@ -14,7 +14,7 @@ Run the Quality Gate audit on current changes with dependency scanning, `qa-audi
 ```
 
 ### Step 2: Quality & Security Audit (qa-auditor, RTM & 12D Matrix)
-Invoke the **`reviewer`** subagent (`.agents/agents/reviewer.md`):
+Invoke the **`reviewer`** subagent (`.opencode/agent/reviewer.md`):
 - Load the `qa-auditor` skill to execute Quality Gate Audit (L1-L5).
 - LINT & TYPECHECK: Run linter and type checker. Fix all warnings/errors.
 - SECRET SCAN: Run secret scanning on staged diff. If secrets found → remove + patch.

@@ -14,7 +14,7 @@ git stash push -m "pre-pipeline-$(date +%s)" || git commit -am "checkpoint: pre-
 ```
 
 ### Step 1: Plan (BA Expert & RTM)
-Invoke the **`planner`** subagent (`.agents/agents/planner.md`):
+Invoke the **`planner`** subagent (`.opencode/agent/planner.md`):
 - Survey and create SPEC for `$ARGUMENTS` at `plans/SPEC_$(echo $ARGUMENTS | tr ' ' '-').md`.
 - Load the `ba-expert` skill to construct RTM, 12-Dimensional Edge Case Matrix, NFRs, and DFD.
 - Run `./bin/validate-traceability.sh`.
@@ -28,15 +28,15 @@ Invoke the **`planner`** subagent (`.agents/agents/planner.md`):
 ```bash
 ./bin/scan-dependencies.sh
 ```
-Invoke the **`reviewer`** subagent (`.agents/agents/reviewer.md`):
+Invoke the **`reviewer`** subagent (`.opencode/agent/reviewer.md`):
 - Load the `qa-auditor` skill. Lint + typecheck + secret scan + OWASP-AI checklist.
 - Run `./bin/validate-traceability.sh`. Fix all issues.
 
 ### Step 4: E2E QA (QA Reproducer with rollback on failure)
-Invoke the **`qa`** subagent (`.agents/agents/qa.md`):
+Invoke the **`qa`** subagent (`.opencode/agent/qa.md`):
 - Start local server. Load `qa-reproducer` skill for MRE pipeline.
 - Run E2E test covering 12-Dimensional edge cases. Collect evidence into `tests/qa-evidence/`.
 
 ### Step 5: Review & Commit (3-State Verification)
-Invoke the **`reviewer`** subagent (`.agents/agents/reviewer.md`):
+Invoke the **`reviewer`** subagent (`.opencode/agent/reviewer.md`):
 - Load the `qa-auditor` and `ba-expert` skills. Pre-commit diff audit + 3-State Verification + RTM audit + Conventional Commits.

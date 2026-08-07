@@ -13,7 +13,7 @@ Review all changes, run requirement traceability validation, apply 3-State Verif
 ./bin/validate-traceability.sh
 ```
 
-Invoke the **`reviewer`** subagent (`.agents/agents/reviewer.md`):
+Invoke the **`reviewer`** subagent (`.opencode/agent/reviewer.md`):
 - Load the `qa-auditor` and `ba-expert` skills to execute:
   1. PRE-COMMIT DIFF AUDIT — check 6 criteria:
      - Any leftover debug logs (`console.log`, `print`, `dd`, `dump`)?

@@ -14,6 +14,6 @@ Scaffold `ockit` into a target project using `bin/init-ockit.sh`.
 ```
 
 ### Step 2: Verification & Agent Alignment
-Invoke the **`planner`** subagent (`.agents/agents/planner.md`):
-- Verify `.agents/` directory structure and `install-manifest.json`.
+Invoke the **`planner`** subagent (`.opencode/agent/planner.md`):
+- Verify `.opencode/` directory structure and `install-manifest.json`.
 - Confirm `AGENTS.md` and native Markdown subagent specifications align with the project's primary tech stack.

@@ -9,7 +9,7 @@ Distill insights, user directives, bug fixes, or architecture conventions into p
 ## Steps
 
 ### Step 1: Memory Extraction & Pattern Mining
-Invoke the **`reviewer`** subagent (`.agents/agents/reviewer.md`):
+Invoke the **`reviewer`** subagent (`.opencode/agent/reviewer.md`):
 - Analyze recent conversation history, code changes, or user feedback for `$ARGUMENTS`.
 - Extract key project conventions, recurring gotchas, or setup rules.
 - Format the learning entry with context, rationale, and actionable instructions.

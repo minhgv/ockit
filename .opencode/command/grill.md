@@ -9,7 +9,7 @@ Stress-test plans, ADRs, and technical specifications using the `grill-me` skill
 ## Steps
 
 ### Step 1: 11-Question Scrutiny & Risk Exposure
-Invoke the **`reviewer`** subagent (`.agents/agents/reviewer.md`):
+Invoke the **`reviewer`** subagent (`.opencode/agent/reviewer.md`):
 - Load the `grill-me` skill to stress-test the proposed plan or SPEC for `$ARGUMENTS`.
 - Evaluate all 11 scrutiny questions:
   1. What assumptions are you making that could be wrong?
@@ -26,5 +26,5 @@ Invoke the **`reviewer`** subagent (`.agents/agents/reviewer.md`):
 - Surface hidden risks and force concrete answers rather than "figure it out later".
 
 ### Step 2: Plan Hardening & Verification
-Invoke the **`planner`** subagent (`.agents/agents/planner.md`):
+Invoke the **`planner`** subagent (`.opencode/agent/planner.md`):
 - Update the technical specification to address all identified vulnerabilities, record answers to all scrutiny questions, and confirm plan resilience before code implementation.

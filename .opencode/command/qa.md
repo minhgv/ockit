@@ -9,7 +9,7 @@ Run E2E QA testing on a local server using `qa-test-gen` and `qa-reproducer` ski
 ## Steps
 
 ### Step 1: Dogfooding QA & Bug Reproduction (qa-reproducer & qa-test-gen)
-Invoke the **`qa`** subagent (`.agents/agents/qa.md`):
+Invoke the **`qa`** subagent (`.opencode/agent/qa.md`):
 - Load the `qa-test-gen` and `qa-reproducer` skills.
 - Start local dev server (if not running). Verify health-check.
 - Run test cases according to Section 1.4 (User Stories & Gherkin BDD Matrix) and Section 6 (ACM) in `plans/SPEC_*.md`:

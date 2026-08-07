@@ -9,7 +9,7 @@ Configure recurring background audit tasks or one-shot timers for project health
 ## Steps
 
 ### Step 1: Audit Schedule Specification
-Invoke the **`qa`** subagent (`.agents/agents/qa.md`):
+Invoke the **`qa`** subagent (`.opencode/agent/qa.md`):
 - Define scheduled task target for `$ARGUMENTS` (e.g., dependency security scan, health check, quality gate audit).
 - Set interval or timer duration (e.g., one-shot timer or recurring cron check).
 

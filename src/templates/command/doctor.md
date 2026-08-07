@@ -14,6 +14,6 @@ Run environment, subagent, skill, and toolchain diagnostics using `bin/opencode-
 ```
 
 ### Step 2: Diagnostic Synthesis & Remediation
-Invoke the **`reviewer`** subagent (`.agents/agents/reviewer.md`):
+Invoke the **`reviewer`** subagent (`.opencode/agent/reviewer.md`):
 - Review the output of `bin/opencode-doctor.sh`.
 - If any `[FAIL]` or `[WARN]` items are reported (such as missing language linter, unauthenticated CLI, or missing MCP server), provide step-by-step resolution commands.

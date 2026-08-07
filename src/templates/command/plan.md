@@ -9,7 +9,7 @@ Create a SPEC for a new feature using the `ba-expert` skill, RTM, and 12-Dimensi
 ## Steps
 
 ### Step 1: Survey & BA Plan
-Invoke the **`planner`** subagent (`.agents/agents/planner.md`):
+Invoke the **`planner`** subagent (`.opencode/agent/planner.md`):
 - Survey the codebase related to `$ARGUMENTS`.
 - Load the `ba-expert` skill to construct the Requirements Traceability Matrix (RTM), 12-Dimensional Edge Case Matrix, NFRs, and DFD.
 - Create a SPEC at `plans/SPEC_<feature>.md` following `plans/SPEC_TEMPLATE.md`.
