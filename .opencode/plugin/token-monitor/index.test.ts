@@ -12,6 +12,7 @@ import {
 	aggregateMessage,
 	aggregateStep,
 	createTokenStore,
+	MAX_SEEN_ENTRIES,
 } from "./token-state.js";
 
 function makeMsg(overrides: Partial<AssistantMessage> = {}): AssistantMessage {
@@ -625,5 +626,204 @@ describe("startPolling", () => {
 		cleanup();
 		expect(before).toBe(0);
 		expect(count).toBe(0);
+	});
+});
+
+describe("hardening: missing time guard", () => {
+	it("skips messages where time is undefined (hardening P3-1) — no TypeError", () => {
+		const store = createTokenStore();
+		let threw = false;
+		let result: boolean | undefined;
+		try {
+			result = aggregateMessage(
+				store,
+				makeMsg({
+					time: undefined as unknown as AssistantMessage["time"],
+				}),
+			);
+		} catch {
+			threw = true;
+		}
+		expect(threw).toBe(false);
+		expect(result).toBe(false);
+		expect(store.getModels()).toHaveLength(0);
+	});
+});
+
+describe("hardening: MAX_MODEL_ENTRIES eviction", () => {
+	it("51 distinct models keep <=50 entries; lowest-total evicted; survivors intact", () => {
+		const store = createTokenStore();
+		// 49 high-token models fill the store alongside the 1-token `lowest`.
+		for (let i = 0; i < 49; i++) {
+			aggregateMessage(
+				store,
+				makeMsg({
+					id: `high-${i}`,
+					modelID: `high-${i}`,
+					providerID: "gh",
+					tokens: {
+						input: 1000,
+						output: 0,
+						reasoning: 0,
+						cache: { read: 0, write: 0 },
+					},
+				}),
+			);
+		}
+		aggregateMessage(
+			store,
+			makeMsg({
+				id: "lowest",
+				modelID: "lowest",
+				providerID: "gh",
+				tokens: {
+					input: 1,
+					output: 0,
+					reasoning: 0,
+					cache: { read: 0, write: 0 },
+				},
+			}),
+		);
+		expect(store.getModels()).toHaveLength(50);
+
+		// 51st key arrives — must evict the LOWEST total-token entry (lowest),
+		// keep `extra` + the 49 high models, all counts intact.
+		aggregateMessage(
+			store,
+			makeMsg({
+				id: "extra",
+				modelID: "extra",
+				providerID: "gh",
+				tokens: {
+					input: 500,
+					output: 0,
+					reasoning: 0,
+					cache: { read: 0, write: 0 },
+				},
+			}),
+		);
+
+		const models = store.getModels();
+		expect(models).toHaveLength(50);
+		const ids = models.map((m) => m.modelID);
+		expect(ids).not.toContain("lowest");
+		expect(ids).toContain("extra");
+
+		const extra = models.find((m) => m.modelID === "extra");
+		expect(extra?.inputTokens).toBe(500);
+		expect(extra?.messageCount).toBe(1);
+		for (let i = 0; i < 49; i++) {
+			const high = models.find((m) => m.modelID === `high-${i}`);
+			expect(high?.inputTokens).toBe(1000);
+			expect(high?.messageCount).toBe(1);
+		}
+	});
+});
+
+describe("hardening: composite modelKey", () => {
+	it("same modelID under 2 providers yields 2 distinct rows with independent counts", () => {
+		const store = createTokenStore();
+		aggregateMessage(
+			store,
+			makeMsg({
+				id: "o1",
+				modelID: "claude",
+				providerID: "openai",
+				tokens: {
+					input: 100,
+					output: 50,
+					reasoning: 0,
+					cache: { read: 0, write: 0 },
+				},
+			}),
+		);
+		aggregateMessage(
+			store,
+			makeMsg({
+				id: "a1",
+				modelID: "claude",
+				providerID: "anthropic",
+				tokens: {
+					input: 300,
+					output: 10,
+					reasoning: 0,
+					cache: { read: 0, write: 0 },
+				},
+			}),
+		);
+		const models = store.getModels();
+		expect(models).toHaveLength(2);
+		const openai = models.find((m) => m.providerID === "openai");
+		const anthropic = models.find((m) => m.providerID === "anthropic");
+		expect(openai?.modelID).toBe("claude");
+		expect(openai?.inputTokens).toBe(100);
+		expect(openai?.outputTokens).toBe(50);
+		expect(anthropic?.modelID).toBe("claude");
+		expect(anthropic?.inputTokens).toBe(300);
+		expect(anthropic?.outputTokens).toBe(10);
+	});
+});
+
+describe("hardening: seen dedup cap", () => {
+	it("caps seen at MAX_SEEN_ENTRIES with FIFO eviction; evicted-id replay re-counts", () => {
+		const store = createTokenStore();
+		for (let i = 0; i <= MAX_SEEN_ENTRIES; i++) {
+			expect(
+				aggregateMessage(
+					store,
+					makeMsg({
+						id: `m-${i}`,
+						modelID: "claude",
+						providerID: "gh",
+						tokens: {
+							input: 1,
+							output: 0,
+							reasoning: 0,
+							cache: { read: 0, write: 0 },
+						},
+					}),
+				),
+			).toBe(true);
+		}
+		// FIFO cap: size stays at MAX_SEEN_ENTRIES, oldest (m-0) evicted.
+		expect(store.seen.size).toBe(MAX_SEEN_ENTRIES);
+		expect(store.seen.has("m-0")).toBe(false);
+		// Within-window duplicate still dedups.
+		expect(
+			aggregateMessage(
+				store,
+				makeMsg({
+					id: `m-${MAX_SEEN_ENTRIES}`,
+					modelID: "claude",
+					providerID: "gh",
+					tokens: {
+						input: 1,
+						output: 0,
+						reasoning: 0,
+						cache: { read: 0, write: 0 },
+					},
+				}),
+			),
+		).toBe(false);
+		// Evicted replay re-counts (documented E-016 relaxation beyond cap).
+		expect(
+			aggregateMessage(
+				store,
+				makeMsg({
+					id: "m-0",
+					modelID: "claude",
+					providerID: "gh",
+					tokens: {
+						input: 1,
+						output: 0,
+						reasoning: 0,
+						cache: { read: 0, write: 0 },
+					},
+				}),
+			),
+		).toBe(true);
+		const models = store.getModels();
+		expect(models).toHaveLength(1);
+		expect(models[0].messageCount).toBe(MAX_SEEN_ENTRIES + 2);
 	});
 });

@@ -14,9 +14,28 @@ export interface PerModelTotals {
 }
 
 export const MAX_MODEL_ENTRIES = 50;
+export const MAX_SEEN_ENTRIES = 10000;
 
 export function modelKey(providerID: string, modelID: string): string {
 	return `${providerID}/${modelID}`;
+}
+
+/**
+ * Record a dedup id in the shared `seen` set, capping it at
+ * `MAX_SEEN_ENTRIES` with FIFO eviction of the oldest insertion.
+ * Set preserves insertion order, so `values().next()` is the oldest id
+ * (O(1) amortized — no re-scan, no allocation beyond the iterator).
+ * Evicting an id relaxes first-payload-wins (parent E-016) only for replays
+ * older than the eviction window.
+ */
+function recordSeen(seen: Set<string>, id: string): void {
+	seen.add(id);
+	if (seen.size > MAX_SEEN_ENTRIES) {
+		const oldest = seen.values().next().value;
+		if (oldest !== undefined) {
+			seen.delete(oldest);
+		}
+	}
 }
 
 export function totalTokens(model: PerModelTotals): number {
@@ -114,9 +133,9 @@ export function aggregateMessage(
 	msg: AssistantMessage,
 ): boolean {
 	if (!msg.tokens) return false;
-	if (!msg.time.completed) return false;
+	if (!msg.time?.completed) return false;
 	if (store.seen.has(msg.id)) return false;
-	store.seen.add(msg.id);
+	recordSeen(store.seen, msg.id);
 
 	addTokensToModel(store, msg.providerID, msg.modelID, msg.tokens, msg.cost);
 	return true;
@@ -138,7 +157,7 @@ export function aggregateStep(
 ): boolean {
 	if (!step.tokens) return false;
 	if (store.seen.has(step.assistantMessageID)) return false;
-	store.seen.add(step.assistantMessageID);
+	recordSeen(store.seen, step.assistantMessageID);
 
 	addTokensToModel(store, model.providerID, model.modelID, step.tokens);
 	return true;
