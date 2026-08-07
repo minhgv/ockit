@@ -7,6 +7,26 @@ description: Business Analysis & Software Specification Expert — Domain Discov
 
 The `ba-expert` skill transforms the subagent into a Principal Business Analyst and Domain Architect responsible for standardizing software specifications, requirements traceability, domain boundaries, and risk matrices.
 
+## 0. Mandatory Pre-Read Gate (EXECUTE FIRST)
+
+**Before writing ANY artefact, you MUST Read the corresponding reference template.** Skipping this gate produces output that fails `ockit verify` and violates the planning contract.
+
+| Before writing... | You MUST Read... |
+|---|---|
+| Any SPEC document | `references/spec-master-template.md` |
+| RTM (Requirement Traceability Matrix) | `references/rtm-template.md` |
+| ACM (12-Dimensional Edge Case Matrix) | `references/acm-template.md` |
+| NFR (Non-Functional Requirements) | `references/nfr-template.md` |
+| DFD (Data Flow Diagram) | `references/dfd-template.md` |
+| User Stories / BDD scenarios | `references/gherkin-bdd-template.md` |
+| Domain Discovery | `references/domain-discovery-workflow.md` |
+
+**ALWAYS Read `references/verify-contract.md`** — it documents every check `ockit verify` performs. If your output does not match this contract, the `/plan` gate FAILS.
+
+Reference templates are located at `.opencode/skill/ba-expert/references/` (active) or `src/ockit/templates/skill/ba-expert/references/` (packaged).
+
+---
+
 ## 1. Core Principles of Business Analysis
 
 1. **Absolute Completeness:** Zero placeholders (`TODO`, `pass`, `etc.`). All specifications must specify concrete parameters, schemas, and fallback defaults.
@@ -106,11 +126,45 @@ class UserRegistrationOutput(BaseModel):
 
 ---
 
-## 5. Business Analysis Artefact Pipeline
+## 5. Artefact Pipeline & Decision Rule
 
-For features touching >3 files or architecture:
-1. `plans/SPEC_<feature>.md` — Core Feature Specification
-2. `plans/RTM_<feature>.md` — Requirements Traceability Matrix (`R-001` format)
-3. `plans/ACM_<feature>.md` — 12-Dimensional Edge Case Matrix (`E-001` format)
-4. `plans/NFR_<feature>.md` — Non-Functional Requirements (Latency, Throughput, Error Rate, MTTR, Coverage)
-5. `plans/DFD_<feature>.md` — Data Flow Diagram & Trust Boundaries
+### 5.1 Decision: 1-File vs 5-File Pattern
+
+| Criterion | 1-File | 5-File |
+|---|---|---|
+| Files changed | <3 | >3 |
+| Architecture change | No | Yes |
+| Edge cases expected | <12 | >12 |
+
+- **1-File pattern:** Single `plans/SPEC_<feature>.md` with all sections inline (RTM, ACM, NFR, DFD embedded).
+- **5-File pattern:** SPEC master document contains section summaries + pointers to companion files: `RTM_<feature>.md`, `ACM_<feature>.md`, `NFR_<feature>.md`, `DFD_<feature>.md`.
+
+### 5.2 Artefact → Reference Map
+
+| Artefact | Reference template (MUST Read before writing) |
+|---|---|
+| SPEC master | `references/spec-master-template.md` |
+| RTM | `references/rtm-template.md` |
+| ACM | `references/acm-template.md` |
+| NFR | `references/nfr-template.md` |
+| DFD | `references/dfd-template.md` |
+| User Stories / BDD | `references/gherkin-bdd-template.md` |
+| Domain Discovery | `references/domain-discovery-workflow.md` |
+| Verify contract | `references/verify-contract.md` |
+
+### 5.3 Plan Phase Constraint
+
+**DO NOT create or modify code files during the Plan phase.** Only `plans/` artefacts are produced. Implementation happens in the TDD phase after SPEC approval.
+
+### 5.4 Verify Contract (pass criteria)
+
+Output MUST pass `ockit verify` (see `references/verify-contract.md` for exact checks). Key hard requirements:
+
+1. RTM table header MUST contain `| Req ID |`
+2. Document MUST contain string `Edge Case`
+3. Document MUST contain string `3-State Verification`
+4. RTM rows MUST start with `R-<number>`
+5. ACM rows MUST start with `E-<number>`
+6. ba-expert skill content markers present: `12-Dimensional`, `Bounded Contexts`, `User Stories`, `Zod`
+
+Failure on any → exit 1 → `/plan` gate fails.

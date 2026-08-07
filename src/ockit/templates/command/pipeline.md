@@ -10,8 +10,9 @@ Execute the complete 5-step agentic engineering workflow for a feature, fully in
 
 ### Step 1: Plan (BA & Specification)
 Invoke the **`planner`** subagent (`.opencode/agent/planner.md`):
-- Survey the relevant module and create a SPEC at `plans/SPEC_$(FEATURE).md` following `plans/SPEC_TEMPLATE.md`.
-- Load the `ba-expert` skill to construct the Requirements Traceability Matrix (RTM), 12-Dimensional Edge Case Matrix, Non-Functional Requirements (NFRs), and Data Flow Diagram (DFD).
+- Survey the relevant module and create a SPEC at `plans/SPEC_$(FEATURE).md` following `plans/SPEC_TEMPLATE.md` (blank form) annotated by the `ba-expert` skill's `references/spec-master-template.md` (guide).
+- Load the `ba-expert` skill — follow §0 Mandatory Pre-Read Gate: Read reference templates under `.opencode/skill/ba-expert/references/` BEFORE writing any artefact.
+- Construct the Requirements Traceability Matrix (RTM), 12-Dimensional Edge Case Matrix, Non-Functional Requirements (NFRs), and Data Flow Diagram (DFD) using the reference templates as structural guides.
 - Run `!ockit verify` to verify plan compliance.
 
 ### Step 2: Shift-Left Destructive TDD Implementation
