@@ -178,6 +178,14 @@ class TestR006Vitest:
             f"Context=config must include 'plugin/**/*.test.ts'; got:\n{text}; "
             "Fix=scope the vitest run to plugin test files."
         )
+        # R-012/E-032 scaffold contract: the harness must ship in templates so
+        # scaffolded targets can run `npm test` / `npm run type-check`.
+        tpl = REPO_ROOT / "src" / "ockit" / "templates" / "vitest.config.ts"
+        assert tpl.is_file() and tpl.read_bytes() == cfg.read_bytes(), (
+            "What=template vitest.config.ts missing or drifted; "
+            f"Context=template must byte-match active '{cfg}'; "
+            "Fix=mirror .opencode/vitest.config.ts into src/ockit/templates/."
+        )
 
 
 class TestR007Tsconfig:
@@ -217,6 +225,32 @@ class TestR007Tsconfig:
             "What=typecheck override omits token-monitor; "
             f"Context={override} content:\n{over_text}; "
             "Fix=include token-monitor/**/*.ts and token-monitor/**/*.tsx."
+        )
+        # R-012/E-032 scaffold contract: tsconfig harness must ship in templates
+        # so scaffolded targets can run `npm run type-check` (the template
+        # package.json script references plugin/tsconfig.typecheck.json).
+        tpl_base = REPO_ROOT / "src" / "ockit" / "templates" / "tsconfig.json"
+        tpl_override = (
+            REPO_ROOT
+            / "src"
+            / "ockit"
+            / "templates"
+            / "plugin"
+            / "tsconfig.typecheck.json"
+        )
+        assert tpl_base.is_file() and tpl_base.read_bytes() == base.read_bytes(), (
+            "What=template tsconfig.json missing or drifted; "
+            f"Context=template must byte-match active '{base}'; "
+            "Fix=mirror .opencode/tsconfig.json into src/ockit/templates/."
+        )
+        assert (
+            tpl_override.is_file()
+            and tpl_override.read_bytes() == override.read_bytes()
+        ), (
+            "What=template plugin/tsconfig.typecheck.json missing or drifted; "
+            f"Context=template must byte-match active '{override}'; "
+            "Fix=mirror .opencode/plugin/tsconfig.typecheck.json into "
+            "src/ockit/templates/plugin/."
         )
 
 
