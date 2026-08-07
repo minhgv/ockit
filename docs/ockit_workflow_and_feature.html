@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ockit — Workflow & Feature Analysis</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+  });
+</script>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#161a22; --panel2:#1c2230; --ink:#e6e9ef; --muted:#9aa4b2;
+    --accent:#5cc8ff; --green:#4ade80; --amber:#fbbf24; --red:#f87171; --violet:#c4b5fd;
+    --line:#262d3b;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.6; font-size:15px;
+  }
+  .wrap{max-width:1180px; margin:0 auto; padding:40px 24px 120px}
+  header.hero{
+    border:1px solid var(--line); border-radius:16px; padding:28px 32px;
+    background:linear-gradient(135deg,#1a2030,#11151d); margin-bottom:32px;
+  }
+  header.hero h1{margin:0 0 6px; font-size:28px; letter-spacing:-0.02em}
+  header.hero .sub{color:var(--muted); font-size:15px}
+  header.hero .meta{display:flex; gap:18px; flex-wrap:wrap; margin-top:16px; font-size:13px; color:var(--muted)}
+  header.hero .meta span{display:inline-flex; align-items:center; gap:6px}
+  header.hero .meta b{color:var(--ink); font-weight:600}
+  section{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:24px 28px; margin-bottom:24px;
+  }
+  h2{margin:0 0 16px; font-size:20px; border-left:3px solid var(--accent); padding-left:12px}
+  h3{margin:24px 0 10px; font-size:16px; color:var(--accent)}
+  h4{margin:18px 0 8px; font-size:14px; color:var(--violet); text-transform:uppercase; letter-spacing:0.06em}
+  p{margin:8px 0}
+  code{background:#0d1017; padding:2px 6px; border-radius:5px; font-family:"SF Mono",Menlo,monospace; font-size:13px; color:#f1d59b}
+  pre{background:#0d1017; padding:14px 16px; border-radius:10px; overflow:auto; border:1px solid var(--line)}
+  pre code{background:none; padding:0; color:#cdd6e4}
+  table{width:100%; border-collapse:collapse; margin:12px 0; font-size:13.5px}
+  th,td{border:1px solid var(--line); padding:9px 12px; text-align:left; vertical-align:top}
+  th{background:var(--panel2); color:var(--accent); font-weight:600}
+  tr:nth-child(even) td{background:#141925}
+  .tag{display:inline-block; padding:2px 9px; border-radius:999px; font-size:12px; font-weight:600}
+  .t-cli{background:#1e3a5f; color:#9ecbff}
+  .t-agent{background:#3b2f5e; color:#c4b5fd}
+  .t-skill{background:#1f4d3a; color:#86efac}
+  .t-plugin{background:#5e3a2f; color:#fbbf24}
+  .t-flow{background:#4a4a1f; color:#facc15}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:20px}
+  @media(max-width:820px){.grid2{grid-template-columns:1fr}}
+  .card{background:var(--panel2); border:1px solid var(--line); border-radius:10px; padding:14px 16px}
+  .card h4{margin-top:0}
+  .mermaid{background:#fafafa; border-radius:10px; padding:16px; text-align:center; margin:12px 0}
+  .pill{display:inline-block; background:#0d1017; border:1px solid var(--line); border-radius:6px; padding:1px 8px; margin:2px; font-size:12.5px}
+  .sev{font-weight:700; padding:1px 7px; border-radius:5px; font-size:12px}
+  .sev.high{background:#3b1212; color:#f87171}
+  .sev.med{background:#3b2f12; color:#fbbf24}
+  .sev.low{background:#123b1f; color:#4ade80}
+  .sev.info{background:#12243b; color:#5cc8ff}
+  ul{padding-left:20px} li{margin:3px 0}
+  .toc{columns:2; font-size:14px} .toc a{color:var(--accent); text-decoration:none}
+  .kbd{background:#0d1017; border:1px solid var(--line); border-bottom-width:2px; border-radius:5px; padding:1px 7px; font-size:12.5px; font-family:monospace}
+  .note{border-left:3px solid var(--amber); background:#2a2310; padding:10px 14px; border-radius:0 8px 8px 0; margin:12px 0; font-size:14px}
+  footer{color:var(--muted); text-align:center; font-size:13px; margin-top:40px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>ockit — Workflow &amp; Feature Analysis</h1>
+  <div class="sub">OpenCode-Native Autonomous Agent Engineering Scaffold &amp; Plugin Suite — Business Analysis Report</div>
+  <div class="meta">
+    <span>📦 Version: <b>1.0.0.dev1</b></span>
+    <span>🐍 Python: <b>≥3.9</b></span>
+    <span>🎯 Entry: <b><code>ockit</code> CLI</code></b></span>
+    <span>📄 Source: <b>src/ockit/</b></span>
+    <span>🧪 Tests: <b>227 passed</b></span>
+  </div>
+  <div class="note" style="margin-top:18px">
+    Phân tích theo phương pháp luận <b>ba-expert</b> (Domain Discovery → Ubiquitous Language → Bounded Contexts → Workflow Flows → Edge-Case awareness → Issue Register).
+    Mỗi claim có引用 source <code>file:line</code>.
+  </div>
+</header>
+
+<section>
+  <h2>0. Mục lục</h2>
+  <div class="toc">
+    <a href="#domain">1. Ubiquitous Language</a><br>
+    <a href="#contexts">2. Bounded Contexts</a><br>
+    <a href="#arch">3. Kiến trúc tổng thể</a><br>
+    <a href="#cli">4. CLI Command Workflows</a><br>
+    <a href="#init">5. <code>ockit init</code> Flow</a><br>
+    <a href="#doctor">6. <code>ockit doctor</code> Flow</a><br>
+    <a href="#verify">7. <code>ockit verify</code> Flow</a><br>
+    <a href="#sync">8. <code>ockit sync</code> Flow</a><br>
+    <a href="#scan">9. <code>ockit scan-deps</code> Flow</a><br>
+    <a href="#agents">10. Agent System</a><br>
+    <a href="#commands">11. Slash Commands</a><br>
+    <a href="#plugins">12. Native Plugins</a><br>
+    <a href="#skills">13. Skill Suite</a><br>
+    <a href="#pipeline">14. SDLC Pipeline Flow</a><br>
+    <a href="#edge">15. Edge-Case Matrix</a><br>
+    <a href="#issues">16. Config &amp; Bug Register</a>
+  </div>
+</section>
+
+<section id="domain">
+  <h2>1. Ubiquitous Language (Domain Glossary)</h2>
+  <p>Bảng thuật ngữ — ánh xạ 1:1 giữa khái niệm nghiệp vụ và thực thể source code.</p>
+  <table>
+    <thead><tr><th>Term</th><th>Định nghĩa &amp; Rules</th><th>Implementation Entity</th></tr></thead>
+    <tbody>
+      <tr><td><b>Scaffold</b></td><td>Quá trình khởi tạo <code>.opencode/</code> + root <code>AGENTS.md</code> vào project đích từ packaged templates</td><td><code>OckitInstaller.install()</code> — installer.py:38</td></tr>
+      <tr><td><b>Template Tree</b></td><td>Nguồn sự thật duy nhất: <code>src/ockit/templates/**</code>, đóng gói trong wheel qua <code>package-data</code></td><td><code>_DEFAULT_TEMPLATES_DIR</code> — installer.py:25</td></tr>
+      <tr><td><b>Active Tree</b></td><td>Bản <code>.opencode/</code> đang chạy trong target project, có thể drift khỏi Template Tree</td><td><code>.opencode/</code> ở project root</td></tr>
+      <tr><td><b>Drift</b></td><td>Sự khác biệt byte-giữa Active vs Template: <code>missing_in_active</code>, <code>missing_in_templates</code>, <code>content_mismatch</code></td><td><code>DriftItem.kind</code> — sync.py:36</td></tr>
+      <tr><td><b>RTM</b></td><td>Requirements Traceability Matrix — bảng <code>R-NNN</code> map yêu cầu → test reference</td><td>verify.py:172 <code>_has_rtm_section()</code></td></tr>
+      <tr><td><b>ACM</b></td><td>12-Dimensional Edge Case Matrix — rows <code>E-NNN</code></td><td>verify.py:179 <code>_has_edge_case_section()</code></td></tr>
+      <tr><td><b>3-State Verification</b></td><td>CONFIRMED / PLAUSIBLE / REFUTED — classification mỗi RTM item &amp; concern</td><td>review.md; verify.py:290 marker check</td></tr>
+      <tr><td><b>Verify Suite</b></td><td>5 bộ audit: <code>all | traceability | ba-qa | agents | commands</code></td><td><code>VERIFY_SUITES</code> — verify.py:26</td></tr>
+      <tr><td><b>Slopsquat</b></td><td>Dependency name hallucinated bởi LLM (OWASP-AI-01) — block qua signature list</td><td><code>SLOPSQUAT_PATTERNS</code> — scan_deps.py:19</td></tr>
+      <tr><td><b>Atomic Copy</b></td><td>Write → temp <code>.ockit-tmp-*</code> trong cùng dir → <code>os.replace</code>; kill giữa chừng chỉ để lại orphan tmp</td><td>installer.py:152, sync.py:74</td></tr>
+      <tr><td><b>Path Safety</b></td><td>Target phải nằm trong cwd sau khi resolve symlink + <code>..</code>; reject NUL/newline/escape</td><td><code>resolve_safe_target()</code> — validators.py:54</td></tr>
+      <tr><td><b>Subagent</b></td><td>Agent <code>mode: subagent</code> được orchestrator delegate; khác <code>mode: primary</code></td><td>doctor.py:27 <code>VALID_AGENT_MODES</code></td></tr>
+      <tr><td><b>Built-in Clobber</b></td><td>Tên agent cấm ship vì đè lên built-in OpenCode: <code>explore, general, compaction</code></td><td>verify.py:33 <code>BUILTIN_CLOBBER_NAMES</code></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="contexts">
+  <h2>2. Bounded Contexts Map</h2>
+  <div class="mermaid">
+graph TD
+  subgraph CLI[CLI Context - src/ockit/]
+    INIT[Installer]
+    DOC[Doctor]
+    VER[Verify Engine]
+    SYN[Sync Engine]
+    SCAN[Scan-Deps Engine]
+    WT[Worktree Manager]
+    VAL[Validators]
+  end
+  subgraph TPL[Template Context - packaged]
+    TMPL[templates/**]
+  end
+  subgraph OC[OpenCode Runtime Context - .opencode/]
+    AGENT[5 Agents]
+    CMD[14 Commands]
+    PLG[4 Plugins]
+    SKL[12 Skills]
+    CONF[opencode.json]
+  end
+  subgraph PLAN[Plan Artefact Context - plans/]
+    SPEC[SPEC_*.md]
+    RTM[RTM_*.md]
+    ACM[ACM_*.md]
+  end
+  INIT --> TMPL
+  SYN --> TMPL
+  INIT --> OC
+  VER --> PLAN
+  VER --> OC
+  DOC --> OC
+  CMD -.invoke.-> CLI
+  PLG -.hook.-> OC
+  AGENT -.load.-> SKL
+  TMPL -.source-of-truth.-> OC
+  WT -.isolation.-> CLI
+  </div>
+  <p class="note">Template Tree là <b>source of truth duy nhất</b>. Active Tree chỉ là bản sao; <code>ockit sync</code> kéo 1 chiều templates → active. <code>AGENTS.md</code> là ngoại lệ — install ra root project, không thuộc <code>.opencode/</code> (sync.py:28 <code>_IGNORED_RELS</code>).</p>
+</section>
+
+<section id="arch">
+  <h2>3. Kiến trúc tổng thể</h2>
+  <div class="mermaid">
+flowchart LR
+  User([Developer]) -->|ockit &lt;cmd&gt;| CLI[cli.py:main]
+  CLI -->|argparse dispatch| SUB{Subcommand}
+  SUB -->|init| INST[installer.py]
+  SUB -->|doctor| DOC[doctor.py]
+  SUB -->|verify| VER[verify.py]
+  SUB -->|sync| SYN[sync.py]
+  SUB -->|scan-deps| SCN[scan_deps.py]
+  INST --> VAL[validators.py]
+  INST -->|walk| TPL[(templates/)]
+  SYN -->|diff| TPL
+  VER -->|read| PLANS[(plans/)]
+  VER -->|read| OC[.opencode/]
+  DOC -->|probe| OC
+  DOC -->|subprocess| SYS[git/node/python]
+  SCN -->|walk| DEP[dep files]
+  </div>
+  <p>Một entry duy nhất <code>cli.py:172 main()</code>, dispatch qua argparse. Mỗi subcommand trả exit-code (<code>0</code>=ok, <code>1</code>=fail) — contract quan trọng cho CI gating.</p>
+  <div class="grid2">
+    <div class="card">
+      <h4>Dependency graph nội bộ</h4>
+      <ul>
+        <li><code>cli.py</code> → 5 engine modules</li>
+        <li><code>installer.py</code> → <code>validators.py</code></li>
+        <li><code>verify.py</code> standalone</li>
+        <li><code>sync.py</code> standalone</li>
+        <li><code>doctor.py</code> standalone (subprocess only)</li>
+        <li><code>scan_deps.py</code> standalone</li>
+        <li><code>worktree.py</code> — <b>không wired</b> vào CLI (xem §16)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>External deps</h4>
+      <ul>
+        <li><code>jsonschema ≥4.0</code> — runtime duy nhất (pyproject.toml)</li>
+        <li>Stdlib: <code>argparse, subprocess, shutil, tempfile, pathlib, re</code></li>
+        <li><b>Zero</b> network/CVE-DB dependency</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="cli">
+  <h2>4. CLI Command Workflows — Tổng quan</h2>
+  <table>
+    <thead><tr><th>Subcommand</th><th>Mục đích</th><th>Reads</th><th>Writes</th><th>Exit 1 khi</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag t-cli">init</span></td><td>Scaffold <code>.opencode/</code> + AGENTS.md vào target</td><td><code>templates/**</code></td><td>target/.opencode, target/AGENTS.md</td><td>target unsafe / templates missing</td></tr>
+      <tr><td><span class="tag t-cli">doctor</span></td><td>Probe môi trường + inventory assets</td><td>.opencode/, AGENTS.md, PATH</td><td>— (stdout only)</td><td>git missing / AGENTS.md missing / agent dir missing / agent frontmatter lỗi</td></tr>
+      <tr><td><span class="tag t-cli">verify</span></td><td>Audit RTM + workflow compliance</td><td>plans/, .opencode/, templates/</td><td>—</td><td>bất kỳ finding <code>FAIL</code></td></tr>
+      <tr><td><span class="tag t-cli">sync</span></td><td>Drift check / sync templates → active</td><td>.opencode/, templates/</td><td>.opencode/ (mode sync)</td><td>mode check &amp; drift ≠ ∅</td></tr>
+      <tr><td><span class="tag t-cli">scan-deps</span></td><td>Supply chain pattern scan</td><td>dep lockfiles</td><td>—</td><td>slopsquat signature / insecure http URL</td></tr>
+    </tbody>
+  </table>
+  <p class="note"><b>Safe-default contract:</b> <code>sync</code> mặc định <code>--check</code> (read-only). <code>verify</code> cho phép warning nhưng fail trên error. <code>scan-deps</code> warning không fail.</p>
+</section>
+
+<section id="init">
+  <h2>5. <code>ockit init</code> Workflow</h2>
+  <div class="mermaid">
+flowchart TD
+  A([ockit init --target X]) --> B[validate_target_arg]
+  B --> C{safe?}
+  C -- no --> D[❌ exit 1 - What/Context/Fix]
+  C -- yes --> E[OckitInstaller.install]
+  E --> F{templates_dir exists?}
+  F -- no --> G[❌ ValueError exit 1]
+  F -- yes --> H[_plan_files - walk templates]
+  H --> I{dry_run?}
+  I -- yes --> J[Report only - no write]
+  I -- no --> K[mkdir target + .opencode]
+  K --> L{force &amp; existing?}
+  L -- yes --> M[Backup → .opencode.bak-TIMESTAMP]
+  L -- no --> N[Loop files]
+  M --> N
+  N --> O{exists &amp; !force?}
+  O -- yes --> P[skip - skipped_files]
+  O -- no --> Q[_atomic_copy - tmp + os.replace]
+  Q --> R[copied_files]
+  P --> S([✅ exit 0])
+  R --> S
+  </div>
+  <div class="grid2">
+    <div class="card"><h4>Path safety gate</h4>
+      <code>resolve_safe_target()</code> validators.py:54:<br>
+      • Reject NUL / <code>\n</code> / <code>\r</code><br>
+      • Resolve symlink + <code>..</code><br>
+      • <code>is_within(cwd, resolved)</code> via commonpath<br>
+      • 3-Dim error (What/Context/Fix)
+    </div>
+    <div class="card"><h4>Atomic write guarantee</h4>
+      <code>_atomic_copy()</code> installer.py:152:<br>
+      • <code>tempfile.mkstemp(.ockit-tmp-, dir=dest)</code><br>
+      • <code>shutil.copyfileobj</code> → <code>copystat</code><br>
+      • <code>os.replace(tmp, dst)</code><br>
+      • except: <code>unlink(tmp)</code> + re-raise
+    </div>
+  </div>
+  <h4>Backup behavior (R-005 / E-024)</h4>
+  <p><code>--force</code> overwrite nhưng backup originals vào <code>target/.opencode.bak-&lt;UTC-timestamp&gt;</code> (installer.py:139). Idempotent: re-run skip existing files trừ khi <code>--force</code>.</p>
+</section>
+
+<section id="doctor">
+  <h2>6. <code>ockit doctor</code> Workflow</h2>
+  <p>Probe environment + inventory assets. Return <code>1</code> nếu có errors, <code>0</code> nếu chỉ warnings.</p>
+  <div class="mermaid">
+flowchart LR
+  D[run_doctor] --> P1[1. CLI tools: git* / opencode / node]
+  D --> P2[2. python3 --version - timeout 5s]
+  D --> P3[3. AGENTS.md root]
+  D --> P4[4. .opencode/opencode.json valid JSON]
+  D --> P5[5. agent dir + 5 agents + frontmatter]
+  D --> P6[6. plugin dir + 4 plugins]
+  D --> P7[7. skill dir + 10 skills]
+  D --> P8[8. command dir + 14 commands]
+  P5 --> ERR[errors / warnings]
+  </div>
+  <table>
+    <thead><tr><th>Check</th><th>Level</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>git missing</td><td><span class="sev high">ERROR</span></td><td>doctor.py:86</td></tr>
+      <tr><td>opencode CLI missing</td><td><span class="sev med">WARN</span></td><td>doctor.py:91</td></tr>
+      <tr><td>node missing</td><td><span class="sev med">WARN</span></td><td>doctor.py:96</td></tr>
+      <tr><td>AGENTS.md missing</td><td><span class="sev high">ERROR</span></td><td>doctor.py:117</td></tr>
+      <tr><td>opencode.json missing/invalid</td><td><span class="sev high">ERROR</span></td><td>doctor.py:138</td></tr>
+      <tr><td>Custom agent missing</td><td><span class="sev high">ERROR</span></td><td>doctor.py:154</td></tr>
+      <tr><td>Agent frontmatter invalid (name/desc/mode)</td><td><span class="sev high">ERROR</span></td><td>doctor.py:160-182</td></tr>
+      <tr><td>Plugin missing</td><td><span class="sev med">WARN</span></td><td>doctor.py:193</td></tr>
+      <tr><td>Skill missing</td><td><span class="sev med">WARN</span></td><td>doctor.py:220</td></tr>
+      <tr><td>Command missing</td><td><span class="sev med">WARN</span></td><td>doctor.py:249</td></tr>
+    </tbody>
+  </table>
+  <p class="note"><b>D5 policy:</b> <code>explore / general / compaction</code> là built-in OpenCode — <b>không</b> yêu cầu ship (doctor.py:6-9). Built-in clobber bị verify.py chặn.</p>
+</section>
+
+<section id="verify">
+  <h2>7. <code>ockit verify</code> Workflow</h2>
+  <p>Engine audit 4 suite + <code>all</code>. Mỗi finding = <code>[OK|WARN|FAIL] message (path)</code>. Exit 1 khi có bất kỳ FAIL.</p>
+  <div class="mermaid">
+flowchart TD
+  V[run_verify suite] --> S{suite?}
+  S -->|traceability| T[_verify_traceability]
+  S -->|ba-qa| B[_verify_ba_qa]
+  S -->|agents| A[_verify_agents]
+  S -->|commands| C[_verify_commands]
+  S -->|all| ALL[run cả 4]
+  ALL --> T
+  ALL --> B
+  ALL --> A
+  ALL --> C
+  T --> T1[SPEC_TEMPLATE has RTM?]
+  T --> T2[has Edge Case?]
+  T --> T3[has 3-State Verification?]
+  T --> T4[Per SPEC_*.md: RTM + unit-test ref cell]
+  B --> B1[4 BA/QA skills present active+template]
+  B --> B2[Skills mirrored byte-identical]
+  B --> B3[Skill content markers]
+  B --> B4[SPEC_TEMPLATE has RTM/ACM/NFR/DFD sections]
+  B --> B5[Agent .md has Phase10 instructions]
+  A --> A1[No built-in clobber]
+  A --> A2[Frontmatter name/desc/mode valid]
+  A --> A3[mode in primary/subagent]
+  C --> C1[init.md forbidden → must be ockit-init.md]
+  C --> C2[No dead bin refs except allowlist]
+  </div>
+  <h4>Traceability hard markers (must appear trong SPEC)</h4>
+  <p><span class="pill">| Req ID |</span> <span class="pill">Edge Case</span> <span class="pill">3-State Verification</span> <span class="pill">R-NNN rows</span> <span class="pill">E-NNN rows</span></p>
+  <h4>Skill content markers (verify.py:377)</h4>
+  <p><span class="pill">ba-expert: 12-Dimensional, Bounded Contexts, User Stories, Zod</span> <span class="pill">qa-auditor: audit_summary, Runtime Risk Matrix</span> <span class="pill">qa-test-gen: test_plan, Gherkin</span> <span class="pill">qa-reproducer: reproduction_summary, Minimal Reproduction</span></p>
+</section>
+
+<section id="sync">
+  <h2>8. <code>ockit sync</code> Workflow</h2>
+  <div class="mermaid">
+flowchart TD
+  A[run_sync mode] --> B{templates exists?}
+  B -- no --> X[❌ ValueError exit 1]
+  B -- yes --> C[_walk_rel active &amp; templates]
+  C --> D[Loop union rels]
+  D --> E{so sánh byte}
+  E -->|active only| F[missing_in_templates]
+  E -->|template only| G[missing_in_active]
+  E -->|bytes khác| H[content_mismatch]
+  F --> R[DriftItem]
+  G --> R
+  H --> R
+  R --> M{mode?}
+  M -->|check| Z1[exit 1 if drift]
+  M -->|sync| S[_atomic_write templates→active]
+  S --> Z2[re-compute drift - chỉ giữ missing_in_templates]
+  Z2 --> Z3[exit 0]
+  </div>
+  <p class="note"><b>Hướng sync 1 chiều:</b> templates → active. Active-only files <b>không bao giờ</b> bị xóa (sync.py:112-114). Junk filter: <code>__pycache__, .git, node_modules, .DS_Store</code>. <code>AGENTS.md</code> excluded vì init owns (sync.py:28).</p>
+</section>
+
+<section id="scan">
+  <h2>9. <code>ockit scan-deps</code> Workflow</h2>
+  <p>Pattern scan (no network, no CVE-DB). Walk project root trừ <code>.git, node_modules, __pycache__, .venv, venv, dist, build, .opencode</code>.</p>
+  <table>
+    <thead><tr><th>Manifest scanned</th><th>Level</th><th>Trigger</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="3">Tất cả dep files</td><td><span class="sev high">ERROR</span></td><td>Slopsquat signature match (case-insensitive)</td></tr>
+      <tr><td><span class="sev high">ERROR</span></td><td><code>http://</code> non-local URL (MITM risk)</td></tr>
+      <tr><td><span class="sev info">INFO</span></td><td>Local <code>http://localhost|127.0.0.1|[::1]</code> cho phép</td></tr>
+      <tr><td>requirements.txt</td><td><span class="sev med">WARN</span></td><td>Unpinned (no <code>==</code>/<code>&gt;=</code> bound) hoặc <code>==*</code>/<code>&gt;=0.0.0</code></td></tr>
+      <tr><td>package.json</td><td><span class="sev med">WARN</span></td><td><code>^</code> / <code>~</code> / <code>&gt;=</code> / <code>*</code> / <code>latest</code></td></tr>
+    </tbody>
+  </table>
+  <p class="note"><b>Limitation (SPEC non-goal):</b> <code>SLOPSQUAT_PATTERNS</code> là danh sách cố định 6 chữ ký — không phải database động. Bắt được demo signatures (<code>fastapi-utils-v2, react-helper-lib, python-crypto, requests-async-v2, langchain-core-plus, flask-utils-v2</code>) nhưng miss được slopsquatting thực tế.</p>
+</section>
+
+<section id="agents">
+  <h2>10. Agent System (5 custom + built-ins)</h2>
+  <div class="mermaid">
+graph TD
+  ORC[orchestrator<br/>mode: primary<br/>orchestrator.md]
+  PLN[planner<br/>mode: subagent<br/>planner.md]
+  COD[coder<br/>mode: subagent<br/>coder.md]
+  REV[reviewer<br/>mode: subagent<br/>reviewer.md]
+  QA[qa<br/>mode: subagent<br/>qa.md]
+  ORC -->|delegate| PLN
+  ORC -->|delegate| COD
+  ORC -->|delegate| REV
+  ORC -->|delegate| QA
+  PLN -.load skill.-> BA[ba-expert]
+  COD -.load skill.-> QT[qa-test-gen]
+  COD -.load skill.-> QAUD[qa-auditor]
+  REV -.load skill.-> BA
+  REV -.load skill.-> QAUD
+  QA -.load skill.-> QR[qa-reproducer]
+  QA -.load skill.-> QT
+  </div>
+  <table>
+    <thead><tr><th>Agent</th><th>Role</th><th>Skills used</th><th>SDLC role</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag t-agent">orchestrator</span></td><td>Master pipeline controller, SDLC state machine</td><td>—</td><td>Delegate &amp; enforce worktree isolation + rollback</td></tr>
+      <tr><td><span class="tag t-agent">planner</span></td><td>Lead Architect &amp; BA</td><td>ba-expert, brainstorming</td><td>Domain discovery, RTM, 12D ACM, SPEC</td></tr>
+      <tr><td><span class="tag t-agent">coder</span></td><td>Senior TDD Dev</td><td>qa-test-gen, qa-auditor</td><td>RED → GREEN → REFACTOR</td></tr>
+      <tr><td><span class="tag t-agent">reviewer</span></td><td>Principal Security &amp; Quality</td><td>qa-auditor, ba-expert</td><td>OWASP-AI 5-point, 3-State Verification, Conventional Commits</td></tr>
+      <tr><td><span class="tag t-agent">qa</span></td><td>E2E + Chaos</td><td>qa-reproducer, qa-test-gen</td><td>Dogfooding, MRE pipeline</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="commands">
+  <h2>11. Slash Commands (14 native)</h2>
+  <p>Commands nativized: invoke <code>!ockit ...</code> verbs qua bash hook, dùng frontmatter <code>agent:</code> / <code>subtask:</code> thay vì shell scripts.</p>
+  <table>
+    <thead><tr><th>Command</th><th>Purpose</th><th>Subagents</th></tr></thead>
+    <tbody>
+      <tr><td><span class="kbd">/brainstorm</span></td><td>Unknown classification, 2-4 design variants</td><td>planner</td></tr>
+      <tr><td><span class="kbd">/plan</span></td><td>SPEC-only (no code): RTM + 12D + NFR + DFD</td><td>planner</td></tr>
+      <tr><td><span class="kbd">/grill</span></td><td>Adversarial spec scrutiny before code</td><td>planner</td></tr>
+      <tr><td><span class="kbd">/pipeline</span></td><td>Full 5-step: plan→TDD→gate→QA→review</td><td>planner→coder→reviewer→qa→reviewer</td></tr>
+      <tr><td><span class="kbd">/safe-pipeline</span></td><td>Pipeline + git checkpoint + auto-rollback, <code>subtask:true</code></td><td>+ coder rollback</td></tr>
+      <tr><td><span class="kbd">/gate</span></td><td>Quality gate only: scan-deps + qa-auditor + verify</td><td>reviewer</td></tr>
+      <tr><td><span class="kbd">/review</span></td><td>Pre-commit diff + 3-State Verification + commits</td><td>reviewer</td></tr>
+      <tr><td><span class="kbd">/qa</span></td><td>E2E dogfooding + MRE + evidence</td><td>qa</td></tr>
+      <tr><td><span class="kbd">/solve</span></td><td>5 problem-solving techniques when stuck</td><td>coder</td></tr>
+      <tr><td><span class="kbd">/doctor</span></td><td>Env health probe</td><td>— (CLI direct)</td></tr>
+      <tr><td><span class="kbd">/ockit-init</span></td><td>Scaffold (rename tránh clobber built-in <code>/init</code>)</td><td>—</td></tr>
+      <tr><td><span class="kbd">/learn</span></td><td>Learn skill from existing code</td><td>writing-skills</td></tr>
+      <tr><td><span class="kbd">/schedule</span></td><td>Schedule task</td><td>—</td></tr>
+      <tr><td><span class="kbd">/migrate</span></td><td>Migration helper</td><td>—</td></tr>
+    </tbody>
+  </table>
+  <p class="note">verify.py:644 chặn <code>init.md</code> → buộc rename <code>ockit-init.md</code> để không clobber OpenCode built-in <code>/init</code>.</p>
+</section>
+
+<section id="plugins">
+  <h2>12. Native Plugins (4 OpenCode hooks)</h2>
+  <table>
+    <thead><tr><th>Plugin</th><th>Hook</th><th>Function</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag t-plugin">ockit-quality-gate.js</span></td><td><code>tool.execute.before</code></td><td>Reject control chars, <code>..</code>, <code>-</code> leading, sensitive patterns (<code>.env, .ssh, id_rsa, credentials</code>), forbidden regex, symlink escape</td><td>plugin/ockit-quality-gate.js:29</td></tr>
+      <tr><td><span class="tag t-plugin">ockit-ba-traceability.js</span></td><td><code>tool.execute.after</code></td><td>Warn nếu spec doc (spec|prd|rtm|edge-case|tlgp|tài liệu giải pháp) thiếu RTM hoặc Edge Case</td><td>plugin/ockit-ba-traceability.js:23</td></tr>
+      <tr><td><span class="tag t-plugin">ockit-tdd-runner.js</span></td><td><code>tool</code> (custom)</td><td>Expose <code>run_tdd</code> tool — route tới pytest/vitest/go test/cargo test/phpunit theo lang</td><td>plugin/ockit-tdd-runner.js:19</td></tr>
+      <tr><td><span class="tag t-plugin">ockit-linter-fixer.js</span></td><td><code>tool.execute.after</code></td><td>chmod 0755 file có shebang <code>#!</code></td><td>plugin/ockit-linter-fixer.js:8</td></tr>
+    </tbody>
+  </table>
+  <p class="note"><b>⚠ Bug plugin signature:</b> <code>ockit-ba-traceability.js</code> khai báo <code>async ()</code> nhưng dùng <code>client.app.log</code> bên trong — <code>client</code> không trong scope → throw khi edit spec doc. Xem §16 ISSUE-01.</p>
+</section>
+
+<section id="skills">
+  <h2>13. Skill Suite (12 in active)</h2>
+  <p>Skills = reference docs agent load on-demand. doctor.py:200 expect 10 production skills; active dir có 12 (thêm <code>example-skill</code>, <code>test-skill</code>).</p>
+  <div class="grid2">
+    <div class="card"><h4>Production skills (doctor-checked)</h4>
+      <p><span class="pill">ba-expert</span><span class="pill">brainstorming</span><span class="pill">grill-me</span><span class="pill">problem-solving</span><span class="pill">qa-auditor</span><span class="pill">qa-reproducer</span><span class="pill">qa-test-gen</span><span class="pill">quality-gate</span><span class="pill">tdd-workflow</span><span class="pill">writing-skills</span></p>
+    </div>
+    <div class="card"><h4>ba-expert references (8 templates)</h4>
+      <p><span class="pill">spec-master-template</span><span class="pill">rtm-template</span><span class="pill">acm-template</span><span class="pill">nfr-template</span><span class="pill">dfd-template</span><span class="pill">gherkin-bdd-template</span><span class="pill">domain-discovery-workflow</span><span class="pill">verify-contract</span></p>
+    </div>
+  </div>
+  <p class="note"><b>ba-expert §0 Pre-Read Gate:</b> SKILL.md ép agent Read reference template tương ứng TRƯỚC khi viết artefact. Verify contract (references/verify-contract.md) document mọi check <code>ockit verify</code> làm.</p>
+</section>
+
+<section id="pipeline">
+  <h2>14. SDLC Pipeline Flow (5-step / 11-state)</h2>
+  <p>orchestrator.md:10 khai "11-stage state machine" nhưng liệt kê 10 trạng thái — xem §16 ISSUE-02.</p>
+  <div class="mermaid">
+stateDiagram-v2
+  [*] --> CREATED
+  CREATED --> PREFLIGHT
+  PREFLIGHT --> ISOLATED: git worktree
+  ISOLATED --> PLANNED: ba-expert + verify
+  PLANNED --> APPROVED: user review
+  APPROVED --> BUILT: TDD RED-GREEN-REFACTOR
+  BUILT --> GATED: scan-deps + qa-auditor + verify
+  GATED --> QA_PASSED: E2E + chaos + MRE
+  QA_PASSED --> REVIEWED: 3-State Verification
+  REVIEWED --> COMPLETED: Conventional Commits
+  BUILT --> ISOLATED: rollback on fail
+  GATED --> BUILT: rollback on fail
+  </div>
+  <h4>/pipeline vs /safe-pipeline</h4>
+  <table>
+    <thead><tr><th>Aspect</th><th>/pipeline</th><th>/safe-pipeline</th></tr></thead>
+    <tbody>
+      <tr><td>Isolation</td><td>Theo orchestrator policy</td><td>Step 0: <code>git stash</code> hoặc empty commit checkpoint</td></tr>
+      <tr><td>Rollback</td><td>Manual</td><td>Auto-restore checkpoint trước retry mỗi step fail</td></tr>
+      <tr><td>Subtask</td><td>—</td><td><code>subtask: true</code> — session parent cách ly</td></tr>
+      <tr><td>Agent frontmatter</td><td>—</td><td><code>agent: coder</code></td></tr>
+    </tbody>
+  </table>
+  <div class="mermaid">
+sequenceDiagram
+  participant U as User
+  participant O as orchestrator
+  participant P as planner
+  participant C as coder
+  participant R as reviewer
+  participant Q as qa
+  U->>O: /pipeline FEATURE
+  O->>P: Step1 Plan
+  P->>P: ba-expert: RTM+ACM+NFR+DFD
+  P-->>O: SPEC.md
+  O->>O: !ockit verify
+  O->>C: Step2 TDD
+  C->>C: qa-test-gen destructive cases
+  C->>C: RED→GREEN→REFACTOR
+  O->>R: Step3 Gate
+  R->>R: scan-deps + qa-auditor L1-L5
+  R-->>O: 0 errors
+  O->>Q: Step4 E2E
+  Q->>Q: chaos fuzz + MRE
+  Q-->>O: qa-evidence/
+  O->>R: Step5 Review
+  R->>R: 3-State + Conventional Commits
+  R-->>U: commits pushed
+  </div>
+</section>
+
+<section id="edge">
+  <h2>15. 12-Dimensional Edge-Case Matrix (awareness)</h2>
+  <p>Theo ba-expert ACM, mỗi workflow audit 12 dimension. Bảng này map dimension → nơi ockit xử lý.</p>
+  <table>
+    <thead><tr><th>#</th><th>Dimension</th><th>ockit mitigation</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Null / Missing</td><td>3-Dim error What/Context/Fix cho mọi ValueError</td><td>validators.py:66, installer.py:63, sync.py:118</td></tr>
+      <tr><td>2</td><td>Precision Loss</td><td>N/A (text-only ops)</td><td>—</td></tr>
+      <tr><td>3</td><td>Concurrency</td><td>Atomic per-file write (<code>os.replace</code>); kill-safe tmp cleanup</td><td>installer.py:152, sync.py:74</td></tr>
+      <tr><td>4</td><td>Rate Limit</td><td>Doctor probe timeout 5s (E-027)</td><td>doctor.py:30</td></tr>
+      <tr><td>5</td><td>Schema Drift</td><td>verify ba-qa skill mirror check (byte-identical)</td><td>verify.py:434</td></tr>
+      <tr><td>6</td><td>Idempotency</td><td>init skip existing; sync re-compute drift; verify pure read</td><td>installer.py:98, sync.py:168</td></tr>
+      <tr><td>7</td><td>Partial Failure</td><td>Atomic copy = all-or-nothing per file; backup trước force</td><td>installer.py:139, 167</td></tr>
+      <tr><td>8</td><td>Security Fallback</td><td>Path safety fail-closed; quality-gate plugin deny-first</td><td>validators.py:54, quality-gate.js:39</td></tr>
+      <tr><td>9</td><td>Context Overflow</td><td>N/A</td><td>—</td></tr>
+      <tr><td>10</td><td>Resource Leak</td><td>worktree temp dir cleanup on fail (E-028)</td><td>worktree.py:36</td></tr>
+      <tr><td>11</td><td>Tenant Leak</td><td>N/A (single-tenant scaffold tool)</td><td>—</td></tr>
+      <tr><td>12</td><td>Task Interrupt</td><td>Atomic write tmp → replace; orphan tmp không corrupt dst</td><td>installer.py:152-171</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="issues">
+  <h2>16. Config &amp; Bug Register</h2>
+  <p>Danh sách điểm cấu hình / bug phát hiện qua phân tích. Severity: <span class="sev high">HIGH</span> security/crash · <span class="sev med">MED</span> functional drift · <span class="sev low">LOW</span> polish · <span class="sev info">INFO</span> note.</p>
+
+  <h3>ISSUE-01 — Plugin <code>ockit-ba-traceability.js</code> crash do <code>client</code> undefined <span class="sev high">HIGH</span> <span class="sev low">✅ RESOLVED 2026-08-07</span></h3>
+  <p><b>File:</b> <code>.opencode/plugin/ockit-ba-traceability.js:23,41</code></p>
+  <p><b>What:</b> Export <code>async ()</code> (không tham số) nhưng body gọi <code>await client.app.log(...)</code>. <code>client</code> không có trong scope.</p>
+  <p><b>Impact:</b> Mỗi lần agent edit/write file khớp pattern spec doc (spec|prd|rtm|edge-case|tlgp), hook after ném <code>ReferenceError: client is not defined</code> → log lỗi hoặc break tool chain. Compare <code>ockit-tdd-runner.js</code> đúng dùng <code>async ({ client })</code> destructure (dù không dùng), còn plugin này quên inject.</p>
+  <p><b>Fix:</b> Đổi signature <code>async ({ client }) => ({ "tool.execute.after": async (input) => { ... } })</code> — hoặc bỏ <code>client.app.log</code> nếu OpenCode runtime không inject <code>client</code> cho hook <code>tool.execute.after</code>. Verify contract plugin signature với <code>@opencode-ai/plugin@1.14.40</code>.</p>
+  <p><b>✅ Fix applied (2026-08-07):</b> Wrapped <code>client.app.log(...)</code> trong <code>if (client?.app?.log) { try { await ... } catch {} }</code> — logging best-effort, không bao giờ throw (Constitution Art.7.3). Mirror đồng bộ sang <code>src/ockit/templates/plugin/ockit-ba-traceability.js</code> (byte-identical, R-003). Guard bởi <code>tests/unit/test_plugin_smoke.py::test_r001_ba_traceability_no_throw_without_client</code> + <code>test_r002_all_plugins_export_valid_hook_shape</code>. Xem <code>plans/SPEC_top3_risk_fixes.md</code> (R-001, R-002, R-003).</p>
+
+  <h3>ISSUE-02 — orchestrator.md sai "11-stage" (thực tế 10 states) <span class="sev low">LOW</span></h3>
+  <p><b>File:</b> <code>.opencode/agent/orchestrator.md:10</code></p>
+  <p><b>What:</b> Khai "11-stage SDLC State Machine" nhưng liệt kê <code>CREATED → PREFLIGHT → ISOLATED → PLANNED → APPROVED → BUILT → GATED → QA_PASSED → REVIEWED → COMPLETED</code> = 10 trạng thái.</p>
+  <p><b>Fix:</b> Sửa thành "10-stage" hoặc bổ sung state thiếu (vd. <code>TESTED</code> giữa <code>GATED</code> và <code>QA_PASSED</code>).</p>
+
+  <h3>ISSUE-03 — <code>docs/opencode.json</code> diverge, chứa apiKey + provider hardcoded <span class="sev med">MED</span> <span class="sev low">✅ RESOLVED 2026-08-07</span></h3>
+  <p><b>File:</b> <code>docs/opencode.json:269-371</code></p>
+  <p><b>What:</b> Bản <code>docs/opencode.json</code> khác hẳn bản shipped <code>.opencode/opencode.json</code>. Chứa provider <code>zai</code> với <code>"apiKey": "{env:ZAI_API_KEY}"</code>, baseURL <code>https://api.z.ai/...</code>, provider <code>opencode-go</code> baseURL <code>https://opencode.ai/zen/go/v1</code>, MCP servers (<code>figma-mcp-go</code>, <code>webclaw</code>), third-party plugins (<code>@tarquinen/opencode-dcp</code>, <code>openslimedit</code>, <code>opencodex-fast</code>), <code>small_model: opencode/gpt-5-nano</code>.</p>
+  <p><b>Impact:</b> Vi phạm <code>AGENTS.md §2</code> "templates must never contain personal home paths, apiKeys, or machine-specific MCP/plugin pins". Tạo 2 nguồn sự thật — người đọc không biết bản nào active. Bản shipped (.opencode) sạch; bản docs là personal config leaked.</p>
+  <p><b>Fix:</b> Hoặc xóa <code>docs/opencode.json</code>, hoặc move ra <code>docs/opencode.example.local.json</code> + sanitize ( bỏ apiKey pin, dùng <code>{env:...}</code> placeholder, gộp về structure giống shipped).</p>
+  <p><b>✅ Fix applied (2026-08-07):</b> Đã <code>git rm docs/opencode.json</code> — nguồn sự thật duy nhất là <code>src/ockit/templates/opencode.json</code> (byte-identical với <code>.opencode/opencode.json</code>). Guard bởi <code>tests/unit/test_no_leaked_config.py</code> (R-004) — scan toàn repo, không cho phép <code>opencode.json</code> ngoài 2 vị trí sanctioned chứa personal pins (<code>api.z.ai</code>, <code>figma-mcp-go</code>, <code>webclaw</code>, v.v.). Xem <code>plans/SPEC_top3_risk_fixes.md</code> (R-004).</p>
+
+  <h3>ISSUE-04 — <code>example-skill</code> + <code>test-skill</code> shipped vào target <span class="sev low">LOW</span> <span class="sev low">✅ RESOLVED 2026-08-07</span></h3>
+  <p><b>File:</b> <code>src/ockit/templates/skill/example-skill/</code>, <code>src/ockit/templates/skill/test-skill/</code></p>
+  <p><b>What:</b> 2 skill demo/test tồn tại trong packaged templates → <code>ockit init</code> copy vào target project. doctor.py:200 <code>expected_skills</code> không check chúng nhưng agent có thể load nhầm.</p>
+  <p><b>Impact:</b> Pollute target project với skill không production. <code>installer._IGNORED_FILES</code> chỉ skip <code>.DS_Store</code>, không skip dir skill rác.</p>
+  <p><b>Fix:</b> Move <code>example-skill/</code>, <code>test-skill/</code> ra khỏi <code>src/ockit/templates/skill/</code> vào <code>tests/fixtures/</code>; hoặc thêm <code>_IGNORED_SKILL_DIRS</code> trong installer.</p>
+  <p><b>✅ Fix applied (2026-08-07):</b> Đã relocate 2 demo skill vào <code>tests/fixtures/skills/{example,test}-skill/SKILL.md</code> (preserve content), <code>git rm</code> khỏi <code>src/ockit/templates/skill/</code> + <code>.opencode/skill/</code>. <code>ockit doctor</code> giờ reports exactly 10 production skills; installer <code>_plan_files()</code> không còn list demo. Guard bởi <code>tests/unit/test_installer_skill_exclusion.py</code> (R-005, R-006) + <code>tests/unit/test_doctor_skills.py</code> (R-007). Xem <code>plans/SPEC_top3_risk_fixes.md</code> (R-005, R-006, R-007).</p>
+
+  <h3>ISSUE-05 — <code>installer.py</code> không exclude <code>node_modules</code> (fragility) <span class="sev low">LOW</span></h3>
+  <p><b>File:</b> <code>installer.py:23 <code>_IGNORED_DIRS</code></code></p>
+  <p><b>What:</b> <code>_IGNORED_DIRS = {"__pycache__", ".git"}</code> — thiếu <code>node_modules</code>. Hiện templates không có node_modules nên không leak, nhưng nếu plugin dev cài nhầm deps trong <code>templates/</code> thì sẽ ship toàn bộ.</p>
+  <p><b>Fix:</b> Đồng bộ với <code>sync.py:22</code> (<code>__pycache__, .git, node_modules</code>). Add <code>"node_modules"</code> vào set.</p>
+
+  <h3>ISSUE-06 — <code>worktree.py</code> không wired vào CLI <span class="sev info">INFO</span></h3>
+  <p><b>File:</b> <code>src/ockit/worktree.py</code></p>
+  <p><b>What:</b> Module <code>WorktreeManager</code> implement đầy đủ (create_isolated_worktree, check_patch_apply, remove_worktree) nhưng <code>cli.py</code> không import. Chỉ <code>/safe-pipeline</code> (orchestrator) dùng qua shell <code>git worktree</code>.</p>
+  <p><b>Impact:</b> Code dead từ góc nhìn CLI. Không bug, nhưng không có test coverage CLI path. Cũng note <code>remove_worktree()</code> không xóa temp dir khỏi disk (chỉ unregister git) — leak nhẹ.</p>
+  <p><b>Fix:</b> Hoặc expose subcommand <code>ockit worktree &lt;create|remove&gt;</code>, hoặc document rằng module dành cho orchestrator invoke qua Python API.</p>
+
+  <h3>ISSUE-07 — <code>scan_deps.py</code> package.json false-positive fields <span class="sev low">LOW</span></h3>
+  <p><b>File:</b> <code>scan_deps.py:131-140</code></p>
+  <p><b>What:</b> Loại trừ <code>name, version, description, author, license, main, type</code> khỏi warning unpinned. Nhưng miss <code>engines, bin, browser, peerDependencies, optionalDependencies, resolutions, overrides, exports</code> — những field này có value không phải version semver, có thể trigger warning sai.</p>
+  <p><b>Fix:</b> Mở rộng skip list hoặc chỉ check <code>dependencies</code> + <code>devDependencies</code> key trong JSON (parser-friendly hơn regex text).</p>
+
+  <h3>ISSUE-08 — Plugin hook signature inconsistency <span class="sev info">INFO</span></h3>
+  <p><b>What:</b> 4 plugin dùng 3 pattern khác nhau:</p>
+  <ul>
+    <li><code>quality-gate.js</code>: <code>async () => ({ "tool.execute.before": async (input, output) => {} })</code></li>
+    <li><code>ba-traceability.js</code>: <code>async () => ({ "tool.execute.after": async (input) => {} })</code> — bug (ISSUE-01)</li>
+    <li><code>linter-fixer.js</code>: <code>async () => ({ "tool.execute.after": async (input) => {} })</code></li>
+    <li><code>tdd-runner.js</code>: <code>async ({ client }) => ({ tool: { run_tdd: tool({...}) } })</code> — destructure context</li>
+  </ul>
+  <p><b>Impact:</b> Không nhất quán → dễ copy-paste sai (như ISSUE-01). Chưa rõ contract <code>@opencode-ai/plugin@1.14.40</code> cho <code>tool.execute.before/after</code> có inject <code>(input, output)</code> hay <code>(input)</code>.</p>
+  <p><b>Fix:</b> Document signature chuẩn trong <code>AGENTS.md</code> + add plugin smoke test (Node script load từng plugin, check export shape).</p>
+
+  <h3>ISSUE-09 — <code>safe-pipeline.md</code> "Step 0" + "5-step" mâu thuẫn numbering <span class="sev low">LOW</span></h3>
+  <p><b>File:</b> <code>.opencode/command/safe-pipeline.md:3,9,13</code></p>
+  <p><b>What:</b> Description nói "5-step" nhưng body có Step 0 (git checkpoint) + Step 1-5 → thực chất 6 bước.</p>
+  <p><b>Fix:</b> Hoặc rename "6-step rollback-aware pipeline", hoặc gộp checkpoint vào Step 1.</p>
+
+  <h3>ISSUE-10 — <code>doctor.py</code> <code>results["node_installed"]</code> set nhưng không in <span class="sev low">LOW</span></h3>
+  <p><b>File:</b> <code>doctor.py:69,93</code> vs <code>cli.py:64-93</code></p>
+  <p><b>What:</b> <code>run_doctor</code> set <code>node_installed</code> và warning nếu thiếu, nhưng <code>_run_doctor</code> trong cli.py không in dòng <code>Node: ✅/⚠️</code>. User không thấy trạng thái node trong output (chỉ thấy trong warnings list nếu thiếu).</p>
+  <p><b>Fix:</b> Add <code>print(f"Node: {'✅ Yes' if res['node_installed'] else '⚠️ Not in PATH'}")</code> sau dòng Python Version.</p>
+
+  <h3>ISSUE-11 — <code>verify.py</code> traceability skip non-<code>R-\d+</code> rows nhưng ACM table có thể cùng file <span class="sev info">INFO</span></h3>
+  <p><b>File:</b> <code>verify.py:220</code></p>
+  <p><b>What:</b> <code>_unit_test_ref_missing</code> chỉ count rows <code>R-\d+</code> để tránh đếm ACM rows. Hợp lý. Nhưng nếu RTM dùng format khác (<code>REQ-001</code>, <code>REQ_001</code>) thì tất cả rows bị skip → silent pass.</p>
+  <p><b>Fix:</b> Document format chuẩn <code>R-NNN</code> trong SPEC_TEMPLATE; verify warning khi spec có RTM section nhưng 0 row match.</p>
+
+  <h3>ISSUE-12 — Skill dir tồn tại <code>quality-gate</code> skill nhưng verify content markers không check nó <span class="sev info">INFO</span></h3>
+  <p><b>File:</b> <code>verify.py:375 <code>_BA_QA_SKILLS</code></code> = (ba-expert, qa-auditor, qa-test-gen, qa-reproducer). Không có quality-gate / tdd-workflow / brainstorming / grill-me / problem-solving / writing-skills.</p>
+  <p><b>What:</b> Verify chỉ kiểm content marker cho 4 BA/QA skill. 6 skill còn lại (kể cả <code>quality-gate</code> được agent dùng) không có content contract → có thể rỗng mà verify vẫn pass.</p>
+  <p><b>Fix:</b> Mở rộng <code>_SKILL_CONTENT_MARKERS</code> cho các skill production còn lại, hoặc document rằng verify chỉ audit 4 skill BA/QA core.</p>
+</section>
+
+<section>
+  <h2>17. Tóm tắt</h2>
+  <div class="grid2">
+    <div class="card">
+      <h4>Điểm mạnh</h4>
+      <ul>
+        <li>Contract rõ: exit code 0/1 cho CI gating</li>
+        <li>Path-safety fail-closed + atomic write</li>
+        <li>Source of truth duy nhất (templates), sync 1 chiều</li>
+        <li>3-Dim error message (What/Context/Fix) nhất quán</li>
+        <li>227 tests pass, TDD discipline</li>
+        <li>Zero runtime network dep</li>
+        <li>BA-integrated: RTM + 12D ACM + 3-State Verification</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Risk top-3 — ĐÃ FIX (RESOLVED 2026-08-07)</h4>
+      <ul>
+        <li><span class="sev low">✅ RESOLVED 2026-08-07</span> ISSUE-01: plugin ba-traceability crash — guarded <code>client?.app?.log</code> + try/catch</li>
+        <li><span class="sev low">✅ RESOLVED 2026-08-07</span> ISSUE-03: docs/opencode.json leak — deleted (<code>git rm</code>), portable template là nguồn duy nhất</li>
+        <li><span class="sev low">✅ RESOLVED 2026-08-07</span> ISSUE-04: example/test-skill pollute target — relocated vào <code>tests/fixtures/skills/</code>, doctor reports 10 skills</li>
+      </ul>
+      <p>Cả 3 risk top đã fix + guard bởi unit tests (R-001 … R-010). Còn 9 issue LOW/INFO — xem §16.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Phân tích bằng skill <b>ba-expert</b> · Source <code>src/ockit/</code> @ v1.0.0.dev1 · Generated từ codebase snapshot · 227 tests green
+</footer>
+
+</div>
+</body>
+</html>
