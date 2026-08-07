@@ -2,8 +2,12 @@
 test_portable_config.py — Portable opencode.json tests (R-017)
 
 Verifies the packaged template AND the live repo config are free of personal
-home paths, apiKeys, hardcoded author model pins, and author-only MCP/plugin
+home paths, apiKeys, top-level author model pins, and author-only MCP/plugin
 pins, and that the two trees stay byte-identical (no sync drift).
+
+Agent-level model pins are user-configurable and NOT restricted to a single
+sanctioned model (per-agent models such as gemini for explore/general are
+explicitly supported).
 """
 
 from __future__ import annotations
@@ -55,18 +59,18 @@ def test_no_hardcoded_model_pins(cfg):
     # Top-level model selection omitted so the consumer's global config applies.
     assert "model" not in data, "top-level 'model' pin must be omitted (portable)"
     assert "small_model" not in data, "top-level 'small_model' pin must be omitted"
-    # Agent-level model pins are ALLOWED only when uniform and sanctioned.
-    # The ockit agent suite defaults to the opencode-go gateway model so every
-    # agent/subagent runs on the same cheap-fast model out of the box.
-    _SANCTIONED_AGENT_MODEL = "opencode-go/deepseek-v4-flash"
+    # Agent-level model pins are USER-CONFIGURABLE (per-agent models allowed,
+    # e.g. gemini for explore/general). Only portability is enforced: model ids
+    # must never leak personal home paths.
     agents = data.get("agent", {})
     assert agents, "agent section must exist in portable config"
     for name, spec in agents.items():
-        assert "model" in spec, f"agent '{name}' must carry a model pin"
-        assert spec["model"] == _SANCTIONED_AGENT_MODEL, (
-            f"agent '{name}' model pin '{spec['model']}' is not the sanctioned "
-            f"'{_SANCTIONED_AGENT_MODEL}' (uniform default required)"
-        )
+        model = spec.get("model")
+        if model is not None:
+            for pattern in _HOME_PATH_PATTERNS:
+                assert pattern not in model, (
+                    f"agent '{name}' model pin leaks personal path '{pattern}'"
+                )
 
 
 @pytest.mark.parametrize("cfg", _configs())

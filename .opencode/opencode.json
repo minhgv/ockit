@@ -23,6 +23,14 @@
 		"qa": {
 			"description": "E2E QA Automation & Chaos Engineer",
 			"model": "opencode-go/deepseek-v4-flash"
+		},
+		"general": {
+			"description": "General-purpose subagent for fast, well-defined tasks; delegates complexity quickly",
+			"model": "google-antigravity/gemini-3.6-high"
+		},
+		"explore": {
+			"description": "Fast codebase search specialist",
+			"model": "google-antigravity/gemini-3.6-flash"
 		}
 	},
 	"compaction": {
