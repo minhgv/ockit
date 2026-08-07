@@ -16,10 +16,18 @@ const tui: TuiPluginModule["tui"] = async (api, options) => {
 	const [tick, setTick] = createSignal(0);
 
 	const unsubEvent = api.event.on("message.updated", (event) => {
-		const info = event.properties?.info;
-		if (info?.role !== "assistant") return;
-		const msg = info as AssistantMessage;
-		aggregateMessage(store, msg);
+		try {
+			const info = event.properties?.info;
+			if (info?.role !== "assistant") return;
+			const msg = info as AssistantMessage;
+			aggregateMessage(store, msg);
+		} catch (error) {
+			console.error(
+				`[token-monitor] message.updated handler failed: ${
+					error instanceof Error ? error.message : String(error)
+				}`,
+			);
+		}
 	});
 
 	// session.next.step.started carries the model for the step. Remember it so
@@ -30,19 +38,40 @@ const tui: TuiPluginModule["tui"] = async (api, options) => {
 	const unsubStepStarted = api.event.on(
 		"session.next.step.started",
 		(event) => {
-			const p = event.properties;
-			stepModels.set(p.assistantMessageID, {
-				providerID: p.model.providerID,
-				modelID: p.model.id,
-			});
+			try {
+				const p = event.properties;
+				if (!p?.model) return;
+				stepModels.set(p.assistantMessageID, {
+					providerID: p.model.providerID,
+					modelID: p.model.id,
+				});
+			} catch (error) {
+				console.error(
+					`[token-monitor] session.next.step.started handler failed: ${
+						error instanceof Error ? error.message : String(error)
+					}`,
+				);
+			}
 		},
 	);
 
 	const unsubStepEnded = api.event.on("session.next.step.ended", (event) => {
-		const p = event.properties;
-		const model = stepModels.get(p.assistantMessageID);
-		if (!model) return;
-		aggregateStep(store, p, model);
+		try {
+			const p = event.properties;
+			if (!p?.assistantMessageID) return;
+			const model = stepModels.get(p.assistantMessageID);
+			if (!model) return;
+			aggregateStep(store, p, model);
+			// Bounded state: the step is done, so drop its model entry. The map
+			// then holds only in-flight steps, not one entry per completed step.
+			stepModels.delete(p.assistantMessageID);
+		} catch (error) {
+			console.error(
+				`[token-monitor] session.next.step.ended handler failed: ${
+					error instanceof Error ? error.message : String(error)
+				}`,
+			);
+		}
 	});
 
 	api.slots.register({
