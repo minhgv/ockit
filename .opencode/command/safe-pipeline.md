@@ -16,7 +16,7 @@ git stash push -m "pre-pipeline-$(date +%s)" || git commit -am "checkpoint: pre-
 ```
 
 ### Step 1: Plan (BA Expert & RTM)
-Invoke the **`planner`** subagent (`.opencode/agent/planner.md`):
+**Guard — no SPEC clobbering:** if `plans/SPEC_$(echo $ARGUMENTS | tr ' ' '-').md` already exists (approved draft), DO NOT regenerate or overwrite it. Read it and verify completeness (RTM + 12-Dimensional Edge Case Matrix + NFRs + DFD). Only when the SPEC is missing should the **`planner`** subagent (`.opencode/agent/planner.md`) create it:
 - Survey and create SPEC for `$ARGUMENTS` at `plans/SPEC_$(echo $ARGUMENTS | tr ' ' '-').md`.
 - Load the `ba-expert` skill to construct RTM, 12-Dimensional Edge Case Matrix, NFRs, and DFD.
 - Run `!ockit verify`.
