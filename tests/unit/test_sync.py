@@ -261,10 +261,13 @@ def test_r003_ba_traceability_active_equals_template():
 def test_r012_token_monitor_no_drift():
     """R-012 / E-032: zero sync drift for the token-monitor port scope.
 
-    Scope (SPEC_token_monitor_plugin.md): ``plugin/token-monitor/**``,
-    ``tui.json`` and ``package.json`` must be byte-identical between the active
-    ``.opencode/`` tree and the packaged ``src/ockit/templates/`` tree. Pre-existing
-    out-of-scope drift (e.g. ``.gitignore``, ``package-lock.json``) is excluded.
+    Scope (SPEC_token_monitor_plugin.md R-012): ``plugin/token-monitor/**``,
+    ``tui.json``, ``package.json`` plus the mirrored dev-harness files
+    (``tsconfig.json``, ``vitest.config.ts``, ``plugin/tsconfig.typecheck.json``,
+    ``.gitignore``) must be byte-identical between the active ``.opencode/`` tree
+    and the packaged ``src/ockit/templates/`` tree. ``package-lock.json`` is a
+    deliberate active-only dev lockfile — never scaffolded (wheel bloat, frozen
+    resolved pins) and explicitly excluded from the port scope (SPEC R-012 note).
     """
     from pathlib import Path
 
@@ -279,11 +282,16 @@ def test_r012_token_monitor_no_drift():
         for item in report.drift
         if item.relative_path == "tui.json"
         or item.relative_path == "package.json"
+        or item.relative_path == "tsconfig.json"
+        or item.relative_path == "vitest.config.ts"
+        or item.relative_path == ".gitignore"
         or item.relative_path.startswith("plugin/token-monitor/")
+        or item.relative_path == "plugin/tsconfig.typecheck.json"
     ]
     assert in_scope == [], (
         "What=token-monitor port drifted between active and templates; "
         f"Context=in-scope drift: {in_scope}; "
-        "Fix=mirror the active token-monitor files (plugin/, tui.json, package.json) "
+        "Fix=mirror the active token-monitor files (plugin/, tui.json, package.json, "
+        "tsconfig.json, vitest.config.ts, plugin/tsconfig.typecheck.json, .gitignore) "
         "into src/ockit/templates/ byte-identically."
     )
