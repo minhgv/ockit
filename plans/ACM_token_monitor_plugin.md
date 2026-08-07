@@ -87,11 +87,11 @@
 
 | Test ID | Test location | Status |
 |---------|--------------|--------|
-| T-EDGE-001..E-011, E-016, E-017, E-023, E-029 | `index.test.ts` (ported, verbatim) | Pending port |
-| T-EDGE-004, E-013, E-025, E-026, E-031 | `index.test.ts::parsePollInterval` / `startPolling` (ported) | Pending port |
-| T-EDGE-005..E-007, E-024 | `index.test.ts::formatToken/formatCost/formatPercent` (ported) | Pending port |
-| T-EDGE-008..E-010, E-018, E-019, E-027, E-028, E-030 | `index.integration.test.ts` (ported) | Pending port |
-| T-EDGE-012, E-015, E-020, E-021, E-022, E-032 | `tests/unit/test_token_monitor_manifest.py` (new Python) | Pending create |
-| T-EDGE-014 | `npm --prefix .opencode run type-check` (tsc --noEmit) | Pending create |
+| T-EDGE-001..E-011, E-016, E-017, E-023, E-029 | `index.test.ts` (ported, verbatim) | Ported |
+| T-EDGE-004, E-013, E-025, E-026, E-031 | `index.test.ts::parsePollInterval` / `startPolling` (ported) | Ported |
+| T-EDGE-005..E-007, E-024 | `index.test.ts::formatToken/formatCost/formatPercent` (ported) | Ported |
+| T-EDGE-008..E-010, E-018, E-019, E-027, E-028, E-030 | `index.integration.test.ts` (ported) | Ported |
+| T-EDGE-012, E-015, E-020, E-021, E-022, E-032 | `tests/unit/test_token_monitor_manifest.py` (new Python) | Created |
+| T-EDGE-014 | `npm --prefix .opencode run type-check` (tsc --noEmit) | Created |
 
 **Total tests planned:** 32 edge cases + 18 RTM requirements covered across ported vitest suite and new Python manifest suite.
